@@ -1,0 +1,268 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 220" fill="none">
+  <!-- Ground shadow -->
+  <ellipse cx="260" cy="205" rx="220" ry="14" fill="url(#groundShadow)" />
+
+  <!-- Pillow base - 3D form with domed top -->
+  <path d="
+    M60 155
+    C60 155, 55 130, 70 110
+    Q90 82, 150 72
+    Q200 65, 260 63
+    Q320 65, 370 72
+    Q430 82, 450 110
+    C465 130, 460 155, 460 155
+    Q458 175, 430 185
+    Q370 200, 260 202
+    Q150 200, 90 185
+    Q62 175, 60 155
+    Z
+  " fill="url(#pillowMain)" />
+
+  <!-- Top surface highlight zone -->
+  <path d="
+    M80 145
+    C80 145, 78 125, 90 108
+    Q108 85, 160 76
+    Q210 69, 260 67
+    Q310 69, 360 76
+    Q412 85, 430 108
+    C442 125, 440 145, 440 145
+    Q438 158, 420 164
+    Q370 178, 260 180
+    Q150 178, 100 164
+    Q82 158, 80 145
+    Z
+  " fill="url(#pillowTop)" />
+
+  <!-- Central dome crest - where watch sits, slightly raised -->
+  <ellipse cx="260" cy="120" rx="140" ry="35" fill="url(#domeHighlight)" opacity="0.5" />
+
+  <!-- Pebbled leather texture - fine grain pattern -->
+  <g opacity="0.06">
+    <rect x="100" y="90" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="115" y="85" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="130" y="92" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="145" y="80" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="160" y="88" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="175" y="76" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="190" y="82" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="205" y="74" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="220" y="78" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="235" y="72" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="250" y="70" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="265" y="72" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="280" y="75" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="295" y="78" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="310" y="82" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="325" y="76" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="340" y="85" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="355" y="80" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="370" y="90" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="385" y="95" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="400" y="102" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="410" y="110" width="1.2" height="1.2" rx="0.6" fill="#888" />
+
+    <rect x="95" y="105" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="110" y="100" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="125" y="108" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="140" y="96" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="155" y="102" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="170" y="92" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="185" y="98" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="200" y="90" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="215" y="94" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="230" y="88" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="245" y="85" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="260" y="87" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="275" y="90" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="290" y="93" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="305" y="96" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="320" y="90" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="335" y="100" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="350" y="95" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="365" y="105" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="380" y="108" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="395" y="115" width="1.2" height="1.2" rx="0.6" fill="#888" />
+
+    <rect x="90" y="120" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="105" y="115" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="120" y="122" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="135" y="112" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="150" y="118" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="165" y="108" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="180" y="112" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="195" y="105" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="210" y="108" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="225" y="102" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="240" y="100" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="255" y="98" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="270" y="100" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="285" y="104" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="300" y="108" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="315" y="105" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="330" y="112" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="345" y="110" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="360" y="118" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="375" y="120" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="390" y="125" width="1.2" height="1.2" rx="0.6" fill="#888" />
+
+    <rect x="88" y="135" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="103" y="130" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="118" y="138" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="133" y="128" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="148" y="132" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="163" y="122" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="178" y="126" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="193" y="118" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="208" y="122" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="223" y="115" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="238" y="112" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="253" y="110" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="268" y="112" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="283" y="116" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="298" y="120" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="313" y="118" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="328" y="125" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="343" y="122" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="358" y="130" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="373" y="132" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="388" y="138" width="1.2" height="1.2" rx="0.6" fill="#888" />
+
+    <rect x="92" y="150" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="107" y="145" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="122" y="152" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="137" y="142" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="152" y="148" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="167" y="138" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="182" y="142" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="197" y="135" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="212" y="138" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="227" y="132" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="242" y="128" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="257" y="126" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="272" y="128" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="287" y="132" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="302" y="135" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="317" y="132" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="332" y="140" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="347" y="138" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="362" y="145" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="377" y="148" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="392" y="152" width="1.2" height="1.2" rx="0.6" fill="#888" />
+
+    <rect x="100" y="160" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="120" y="165" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="140" y="158" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="160" y="155" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="180" y="152" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="200" y="148" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="220" y="145" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="240" y="142" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="260" y="140" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="280" y="142" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="300" y="148" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="320" y="150" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="340" y="155" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="360" y="158" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="380" y="162" width="1.2" height="1.2" rx="0.6" fill="#888" />
+    <rect x="400" y="165" width="1.2" height="1.2" rx="0.6" fill="#888" />
+  </g>
+
+  <!-- Rolled/piped edge highlight - top rim -->
+  <path d="
+    M72 118
+    Q90 82, 155 72
+    Q210 64, 260 62
+    Q310 64, 365 72
+    Q430 82, 448 118
+  " stroke="url(#edgeHighlight)" stroke-width="2.5" fill="none" stroke-linecap="round" />
+
+  <!-- Subtle rolled edge shadow just below the rim -->
+  <path d="
+    M74 122
+    Q92 86, 156 76
+    Q210 68, 260 66
+    Q310 68, 364 76
+    Q428 86, 446 122
+  " stroke="#000" stroke-width="1" fill="none" opacity="0.15" stroke-linecap="round" />
+
+  <!-- Left side shadow gradient -->
+  <path d="
+    M60 155
+    C60 155, 55 130, 70 110
+    Q90 82, 150 72
+    L148 76
+    Q92 86, 76 114
+    C64 132, 66 152, 66 152
+    Q62 160, 90 185
+    L92 182
+    Q64 170, 60 155
+    Z
+  " fill="url(#leftShadow)" opacity="0.4" />
+
+  <!-- Right side shadow gradient -->
+  <path d="
+    M460 155
+    C460 155, 465 130, 450 110
+    Q430 82, 370 72
+    L372 76
+    Q428 86, 444 114
+    C456 132, 454 152, 454 152
+    Q458 160, 430 185
+    L428 182
+    Q456 170, 460 155
+    Z
+  " fill="url(#rightShadow)" opacity="0.4" />
+
+  <!-- Front face - bottom edge subtle light -->
+  <path d="
+    Q150 200, 260 202
+    Q370 200, 430 185
+  " stroke="#2a2a2a" stroke-width="0.8" fill="none" opacity="0.3" />
+
+  <defs>
+    <radialGradient id="groundShadow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#000" stop-opacity="0.2" />
+      <stop offset="70%" stop-color="#000" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#000" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="pillowMain" cx="0.5" cy="0.4" r="0.65">
+      <stop offset="0%" stop-color="#1c1c1c" />
+      <stop offset="30%" stop-color="#171717" />
+      <stop offset="60%" stop-color="#111111" />
+      <stop offset="85%" stop-color="#0b0b0b" />
+      <stop offset="100%" stop-color="#070707" />
+    </radialGradient>
+
+    <radialGradient id="pillowTop" cx="0.48" cy="0.35" r="0.55">
+      <stop offset="0%" stop-color="#222222" />
+      <stop offset="35%" stop-color="#1a1a1a" />
+      <stop offset="65%" stop-color="#141414" />
+      <stop offset="100%" stop-color="#0e0e0e" />
+    </radialGradient>
+
+    <radialGradient id="domeHighlight" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#2c2c2c" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#1a1a1a" stop-opacity="0" />
+    </radialGradient>
+
+    <linearGradient id="edgeHighlight" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#333" stop-opacity="0.1" />
+      <stop offset="20%" stop-color="#3a3a3a" stop-opacity="0.35" />
+      <stop offset="50%" stop-color="#404040" stop-opacity="0.4" />
+      <stop offset="80%" stop-color="#3a3a3a" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#333" stop-opacity="0.1" />
+    </linearGradient>
+
+    <linearGradient id="leftShadow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#000" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#000" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="rightShadow" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0%" stop-color="#000" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#000" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+</svg>
