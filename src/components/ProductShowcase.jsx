@@ -6,6 +6,8 @@ import {
   motion,
   AnimatePresence,
   useInView,
+  useScroll,
+  useTransform,
 } from "framer-motion";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 
@@ -26,9 +28,9 @@ const watches = [
   {
     id: 2,
     image: "/watches/watch-yellow-gold.png",
-    name: "Oyster Perpetual",
-    model: "Model 08",
-    dial: "Master Date",
+    name: "Submariner Date",
+    model: "Model 02",
+    dial: "Submariner",
     material: "Rose Gold",
     tag: "Brown Leather",
     price: "$7,250",
@@ -36,9 +38,9 @@ const watches = [
   {
     id: 3,
     image: "/watches/watch-emerald-green.png",
-    name: "Oyster Perpetual",
-    model: "Model 12",
-    dial: "Submariner",
+    name: "Master Date",
+    model: "Model 03",
+    dial: "Master Date",
     material: "White Gold",
     tag: "Silver Frost",
     price: "$9,200",
@@ -46,139 +48,125 @@ const watches = [
 ];
 
 /* ─────────────────────────────────────────────
-   Floating Spec Label Pill
-   Phase 2: Appears with overflow-hidden text reveal (exact same as Hero headline text reveal)
+   Sub-component: Spec Badge / Floating Label
    ───────────────────────────────────────────── */
-function FloatingLabel({ text, position, delay = 0, phase2 }) {
-  const posClasses = {
-    tl: "top-[10%] left-[0%] sm:top-[4%] sm:left-[2%] md:-top-[10%] md:-left-[6%] lg:-top-[20%] lg:-left-[12%]",
-    tr: "top-[10%] right-[0%] sm:top-[4%] sm:right-[2%] md:-top-[10%] md:-right-[6%] lg:-top-[20%] lg:-right-[12%]",
-    bl: "bottom-[2%] -left-[1%] sm:bottom-[16%] sm:left-[2%] md:-bottom-[4%] md:-left-[8%] lg:-bottom-[16%] lg:-left-[14%]",
-    br: "bottom-[2%] -right-[1%] sm:bottom-[16%] sm:right-[2%] md:-bottom-[4%] md:-right-[8%] lg:-bottom-[16%] lg:-right-[14%]",
-  };
+function FloatingLabel({ text, position, delay = 0, phase2 = false }) {
+  const isTL = position === "tl";
+  const isTR = position === "tr";
+  const isBR = position === "br";
+  const isBL = position === "bl";
+
+  let posClasses = "";
+  if (isTL) posClasses = "top-[15%] left-[8%] sm:top-[22%] sm:left-[14%]";
+  if (isTR) posClasses = "top-[15%] right-[8%] sm:top-[22%] sm:right-[14%]";
+  if (isBR) posClasses = "bottom-[18%] right-[8%] sm:bottom-[24%] sm:right-[14%]";
+  if (isBL) posClasses = "bottom-[18%] left-[8%] sm:bottom-[24%] sm:left-[14%]";
 
   return (
-    <div className={`absolute z-30 overflow-hidden ${posClasses[position]}`}>
-      <motion.span
-        suppressHydrationWarning
-        initial={{ y: "110%" }}
-        animate={phase2 ? { y: "0%" } : { y: "110%" }}
+    <div
+      className={`absolute ${posClasses} z-30 pointer-events-none overflow-hidden py-1 px-2`}
+    >
+      <motion.div
+        initial={{ y: "100%", opacity: 0 }}
+        animate={
+          phase2
+            ? { y: 0, opacity: 1 }
+            : { y: "100%", opacity: 0 }
+        }
         transition={{
-          duration: 0.9,
-          delay: delay,
-          ease: [0.22, 1, 0.36, 1],
+          duration: 0.7,
+          delay,
+          ease: [0.16, 1, 0.3, 1],
         }}
-        className="inline-block px-2.5 py-1 text-[8.5px] sm:px-3.5 sm:py-1.5 sm:text-[11px] tracking-[0.08em] sm:tracking-[0.14em] uppercase font-semibold text-[#1a4d2e] bg-[#f7f5ed] border border-gray-300/90 rounded-full shadow-sm backdrop-blur-md"
       >
-        {text}
-      </motion.span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold tracking-wider uppercase bg-[#faf9f6]/90 text-[#1a4d2e] border border-[#1a4d2e]/15 shadow-sm backdrop-blur-sm">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#1a4d2e]" />
+          {text}
+        </span>
+      </motion.div>
     </div>
   );
 }
 
-/* ─────────────────────────────────────────────
-   Watch Card (right side)
-   ───────────────────────────────────────────── */
-function WatchCard({ watch, direction, delay = 0, onClick }) {
-  return (
-    <motion.div
-      layout
-      initial={{ x: direction > 0 ? 180 : -180, opacity: 0, scale: 0.95 }}
-      animate={{ x: 0, opacity: 1, scale: 1 }}
-      exit={{ x: direction > 0 ? -180 : 180, opacity: 0, scale: 0.95 }}
-      transition={{
-        duration: 0.5,
-        delay,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      className="flex-shrink-0 bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200/80 overflow-hidden cursor-pointer group hover:shadow-md transition-all duration-300"
-      onClick={onClick}
-    >
-      <div className="flex items-center gap-3 sm:gap-4 p-2.5 sm:p-4">
-        <div className="relative w-[65px] h-[65px] sm:w-[90px] sm:h-[90px] flex-shrink-0 rounded-lg sm:rounded-xl overflow-hidden bg-[#f9f8f3] flex items-center justify-center p-1">
-          <Image
-            src={watch.image}
-            alt={watch?.name ? `${watch.name} ${watch.dial}` : "Luxury Watch"}
-            width={75}
-            height={75}
-            className="h-auto w-auto max-w-[85%] group-hover:scale-105 transition-transform duration-500"
-          />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="text-[11px] sm:text-[13px] tracking-[0.04em] sm:tracking-[0.05em] font-bold text-[#1a4d2e] truncate">
-            {watch.tag} &middot; {watch.material}
-          </h3>
-          <p className="text-[9.5px] sm:text-[11px] text-[#1a4d2e]/60 mt-0.5 sm:mt-1 tracking-[0.02em] sm:tracking-[0.03em] truncate">
-            {watch.name} — {watch.dial}
-          </p>
-          <p className="text-[12px] sm:text-[14px] font-semibold text-[#4a9c7a] mt-1 sm:mt-1.5">
-            {watch.price}
-          </p>
-        </div>
-        <motion.div
-          whileHover={{ x: 3 }}
-          className="text-[#1a4d2e]/30 group-hover:text-[#1a4d2e] transition-colors duration-300 flex-shrink-0"
-        >
-          <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
-        </motion.div>
-      </div>
-    </motion.div>
-  );
-}
-
-/* ─────────────────────────────────────────────
-   MAIN PRODUCT SHOWCASE SECTION
-   2 Phases:
-   - Phase 1: Left pillow comes from top-left (Hero card style), right content comes from bottom-right (Hero card style). Hero main watch floats in front of screen and lands straight on empty pillow area.
-   - Phase 2: Pillow zooms in, watch sets perfectly, and left spec texts reveal (Hero text reveal animation style).
-   - Carousel: Clicking Right Arrow slides current watch off-screen to left, next watch enters from right onto zoomed pillow.
-   ───────────────────────────────────────────── */
 export default function ProductShowcase() {
+  const sectionRef = useRef(null);
+  const showcaseContainerRef = useRef(null);
+  const isInView = useInView(sectionRef, { margin: "-20% 0px -20% 0px" });
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [showcasePhase2, setShowcasePhase2] = useState(false);
   const [carouselActive, setCarouselActive] = useState(false);
+  const [showcasePhase2, setShowcasePhase2] = useState(false);
 
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: false, margin: "-120px" });
+  // Dynamic pixel offsets from ProductShowcase to Breakdown center stage
+  const [breakdownOffsets, setBreakdownOffsets] = useState({ x: 260, y: 850 });
 
-  /* Trigger Phase 2 (Pillow Zoom & Text Reveal) after Phase 1 entrance */
-  useEffect(() => {
-    if (isInView) {
-      const timer = setTimeout(() => {
-        setShowcasePhase2(true);
-      }, 700);
-      return () => clearTimeout(timer);
+  const calculateBreakdownTarget = () => {
+    if (typeof window === "undefined") return;
+    const showcaseContainer = showcaseContainerRef.current;
+    const breakdownTarget = document.getElementById("breakdown-target-anchor");
+
+    if (showcaseContainer && breakdownTarget) {
+      const sRect = showcaseContainer.getBoundingClientRect();
+      const bRect = breakdownTarget.getBoundingClientRect();
+      const scrollY = window.scrollY || window.pageYOffset;
+
+      const showcaseCY = sRect.top + scrollY + sRect.height / 2;
+      const showcaseCX = sRect.left + scrollY + sRect.width / 2;
+
+      const breakdownCY = bRect.top + scrollY + bRect.height / 2;
+      const breakdownCX = bRect.left + scrollY + bRect.width / 2;
+
+      const deltaY = breakdownCY - showcaseCY;
+      const deltaX = breakdownCX - showcaseCX;
+
+      setBreakdownOffsets({ x: deltaX, y: deltaY });
     } else {
-      setShowcasePhase2(false);
+      const isDesktop = window.innerWidth >= 1024;
+      setBreakdownOffsets({
+        x: isDesktop ? 260 : 0,
+        y: isDesktop ? 860 : 720,
+      });
     }
-  }, [isInView]);
+  };
 
-  /* Listen to hero-watch-reenter event when user scrolls UP back toward Hero */
   useEffect(() => {
-    const handleReenter = () => {
-      if (activeIndex !== 0 || carouselActive) {
-        setDirection(-1);
-        setActiveIndex(0);
-        const timer = setTimeout(() => {
-          setCarouselActive(false);
-        }, 600);
-        return () => clearTimeout(timer);
-      }
+    calculateBreakdownTarget();
+    const timer = setTimeout(calculateBreakdownTarget, 600);
+    window.addEventListener("resize", calculateBreakdownTarget);
+    window.addEventListener("scroll", calculateBreakdownTarget, { passive: true });
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", calculateBreakdownTarget);
+      window.removeEventListener("scroll", calculateBreakdownTarget);
     };
-    window.addEventListener("hero-watch-reenter", handleReenter);
-    return () => window.removeEventListener("hero-watch-reenter", handleReenter);
-  }, [activeIndex, carouselActive]);
+  }, []);
+
+  // Track scroll progress as user scrolls from Showcase down into Breakdown section
+  const { scrollYProgress: breakdownScrollProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  // SINGLE PILLOW + WATCH SCROLL MOTION: Glides continuously from Showcase into Breakdown section!
+  const pillowGlideX = useTransform(breakdownScrollProgress, [0.1, 0.85], [0, breakdownOffsets.x]);
+  const pillowGlideY = useTransform(breakdownScrollProgress, [0.1, 0.85], [0, breakdownOffsets.y]);
+  const pillowGlideScale = useTransform(breakdownScrollProgress, [0.1, 0.5, 0.85], [1, 1.1, 1.45]);
+
+  useEffect(() => {
+    const handleHeroWatchLanding = () => {
+      setShowcasePhase2(true);
+    };
+
+    window.addEventListener("hero-watch-landed", handleHeroWatchLanding);
+    return () => {
+      window.removeEventListener("hero-watch-landed", handleHeroWatchLanding);
+    };
+  }, []);
 
   const activeWatch = watches[activeIndex];
-  const isFirst = activeIndex === 0;
-  const isLast = activeIndex === watches.length - 1;
-
-  /* Strictly show only the remaining upcoming cards to the right */
-  const rightCards = watches.slice(activeIndex + 1);
 
   const handleNext = () => {
-    if (isLast) return;
     if (!carouselActive && typeof window !== "undefined") {
       window.dispatchEvent(
         new CustomEvent("hero-watch-exit", { detail: { dir: 1 } })
@@ -190,7 +178,6 @@ export default function ProductShowcase() {
   };
 
   const handlePrev = () => {
-    if (isFirst) return;
     if (!carouselActive && typeof window !== "undefined") {
       window.dispatchEvent(
         new CustomEvent("hero-watch-exit", { detail: { dir: -1 } })
@@ -215,7 +202,7 @@ export default function ProductShowcase() {
     }
   };
 
-  /* Carousel Slide Variants for Phase 2 (Left watch slides out off-screen to left -100vw, new watch enters from right 100vw) */
+  /* Carousel Slide Variants for Phase 2 */
   const slideVariants = {
     initial: (dir) => ({
       x: dir > 0 ? "100vw" : "-100vw",
@@ -249,7 +236,7 @@ export default function ProductShowcase() {
     <section
       ref={sectionRef}
       id="showcase"
-      className="relative h-screen min-h-screen flex flex-col justify-center bg-[#faf9f6] overflow-hidden pt-16 pb-4 sm:py-12 lg:py-0 z-10 snap-start snap-always"
+      className="relative h-screen min-h-screen flex flex-col justify-center bg-[#faf9f6] overflow-visible pt-16 pb-4 sm:py-12 lg:py-0 z-10 snap-start snap-always"
     >
       {/* Background glow */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(26,77,46,0.03)_0%,_transparent_60%)] pointer-events-none" />
@@ -258,14 +245,23 @@ export default function ProductShowcase() {
         <div className="relative w-full flex flex-col lg:flex-row items-center justify-between gap-3 sm:gap-6 lg:gap-12">
 
           {/* ═══════════════════════════════════════
-              LEFT SIDE: Pillow (Top-Left style entrance & Phase 2 zoom in) + Spec Texts (Hero text reveal style)
+              LEFT SIDE: Pillow + Watch Single Physical Container (GLIDES INTO BREAKDOWN SECTION ON SCROLL)
               ═══════════════════════════════════════ */}
           <div className="relative w-full lg:w-[52%] flex items-center justify-center pt-6 pb-2 sm:pt-0 sm:pb-0 min-h-[210px] sm:min-h-[440px] lg:min-h-[460px]">
             
-            {/* Pillow & Watch Container Area */}
-            <div id="showcase-pillow-container" className="relative w-full max-w-[480px] aspect-[4/3] flex items-center justify-center">
+            {/* THE ONE AND ONLY SINGLE PILLOW + WATCH CONTAINER IN THE DOM */}
+            <motion.div
+              ref={showcaseContainerRef}
+              id="showcase-pillow-container"
+              style={{
+                x: pillowGlideX,
+                y: pillowGlideY,
+                scale: pillowGlideScale,
+              }}
+              className="relative w-full max-w-[480px] aspect-[4/3] flex items-center justify-center z-40"
+            >
 
-              {/* Phase 2: Left Spec Texts — Revealed with Hero section overflow-hidden text reveal style */}
+              {/* Spec Texts */}
               <FloatingLabel
                 text={activeWatch.model}
                 position="tl"
@@ -291,10 +287,7 @@ export default function ProductShowcase() {
                 phase2={showcasePhase2}
               />
 
-              {/* Pillow Stand:
-                  Phase 1: Enters from top-left direction (like hero top-left card)
-                  Phase 2: Zooms in (scale: 1.08) to set the watch perfectly!
-              */}
+              {/* Pillow Stand Image */}
               <motion.div
                 id="showcase-pillow-img"
                 initial={{ opacity: 0, x: -60, y: -30, scale: 0.85, rotate: -8 }}
@@ -315,24 +308,40 @@ export default function ProductShowcase() {
                 <Image
                   src="/watches/watch-pillow.png"
                   alt="Watch Display Pillow Stand"
-                  width={400}
-                  height={200}
-                  className="w-full h-auto drop-shadow-[0_20px_35px_rgba(0,0,0,0.18)]"
+                  width={600}
+                  height={300}
+                  quality={100}
+                  unoptimized
+                  priority
+                  className="w-full h-auto drop-shadow-[0_20px_35px_rgba(0,0,0,0.18)] contrast-[1.04] brightness-[1.02]"
                 />
               </motion.div>
 
-              {/* Watch Display Area:
-                  In Phase 1: Pre-set watch image is removed so Hero watch floats down onto empty pillow.
-                  In Phase 2 / Carousel: When user interacts, carousel watch slides in from right onto zoomed pillow!
-              */}
+              {/* Watch Display Area */}
               <div className="relative z-20 w-full h-full flex items-center justify-center overflow-visible">
+                {/* Default Main Watch (Rendered ONLY after Hero watch lands in Phase 2) */}
+                {showcasePhase2 && !carouselActive && (
+                  <div className="relative w-full h-full flex items-center justify-center pb-[8%]">
+                    <Image
+                      src={activeWatch.image}
+                      alt={activeWatch.name}
+                      width={420}
+                      height={420}
+                      priority
+                      className="w-[200px] sm:w-[310px] md:w-[350px] lg:w-[380px] h-auto object-contain drop-shadow-[0_25px_45px_rgba(0,0,0,0.25)]"
+                    />
+                    <div className="absolute bottom-[10%] left-1/2 -translate-x-1/2 w-[55%] h-[8%] rounded-[50%] bg-black/20 blur-md pointer-events-none" />
+                  </div>
+                )}
+
+                {/* Carousel active watches */}
                 <AnimatePresence mode="popLayout" custom={direction}>
                   {carouselActive && (
                     <motion.div
                       key={activeWatch.id + "-" + activeIndex}
                       custom={direction}
                       variants={slideVariants}
-                      initial={carouselActive ? "initial" : { opacity: 1, scale: 1 }}
+                      initial="initial"
                       animate="animate"
                       exit="exit"
                       className="relative w-full h-full flex items-center justify-center pb-[8%]"
@@ -351,12 +360,11 @@ export default function ProductShowcase() {
                 </AnimatePresence>
               </div>
 
-            </div>
+            </motion.div>
           </div>
 
           {/* ═══════════════════════════════════════
               RIGHT SIDE: Heading + Arrow + Cards Stack
-              Phase 1: Enters from bottom-right direction (like hero bottom-right card)
               ═══════════════════════════════════════ */}
           <motion.div
             initial={{ opacity: 0, x: 60, y: 30, scale: 0.85, rotate: 8 }}
@@ -370,82 +378,103 @@ export default function ProductShowcase() {
               delay: 0.3,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="w-full lg:w-[45%] flex flex-col justify-center lg:py-4"
+            className="w-full lg:w-[48%] flex flex-col justify-center max-w-[560px] z-10"
           >
-            {/* Header & Prominent Right Arrow Button */}
-            <div className="relative mb-2 sm:mb-6">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] sm:text-[12px] tracking-[0.25em] sm:tracking-[0.3em] uppercase text-[#1a4d2e]/50 font-semibold block">
-                  Our Models
-                </span>
-
-                {/* Left & Right Arrow Buttons (← / →) for Carousel Navigation */}
-                <div className="flex items-center gap-2 sm:gap-2.5">
-                  <motion.button
-                    disabled={isFirst}
-                    whileHover={!isFirst ? { scale: 1.08 } : {}}
-                    whileTap={!isFirst ? { scale: 0.94 } : {}}
-                    onClick={handlePrev}
-                    className={`w-9 h-9 sm:w-12 sm:h-12 rounded-full shadow-md border border-gray-200/80 flex items-center justify-center transition-all duration-300 ${
-                      isFirst
-                        ? "bg-gray-100 opacity-40 cursor-not-allowed text-gray-400"
-                        : "bg-white text-[#1a4d2e] hover:bg-[#1a4d2e] hover:text-white cursor-pointer group"
-                    }`}
-                    aria-label="Previous Model"
-                  >
-                    <ChevronLeft className="h-4 w-4 sm:h-6 sm:w-6 stroke-[2.5] group-hover:-translate-x-0.5 transition-transform" />
-                  </motion.button>
-
-                  <motion.button
-                    disabled={isLast}
-                    whileHover={!isLast ? { scale: 1.08 } : {}}
-                    whileTap={!isLast ? { scale: 0.94 } : {}}
-                    onClick={handleNext}
-                    className={`w-9 h-9 sm:w-12 sm:h-12 rounded-full shadow-md border border-gray-200/80 flex items-center justify-center transition-all duration-300 ${
-                      isLast
-                        ? "bg-gray-100 opacity-40 cursor-not-allowed text-gray-400"
-                        : "bg-white text-[#1a4d2e] hover:bg-[#1a4d2e] hover:text-white cursor-pointer group"
-                    }`}
-                    aria-label="Next Model"
-                  >
-                    <ChevronRight className="h-4 w-4 sm:h-6 sm:w-6 stroke-[2.5] group-hover:translate-x-0.5 transition-transform" />
-                  </motion.button>
-                </div>
-              </div>
-
-              <h2
-                className="mt-1 sm:mt-3 text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-normal leading-tight"
-                style={{ fontFamily: "'Esthoria', serif" }}
-              >
-                <span className="text-[#1a1a1a]">Pure </span>
-                <span className="text-[#1a4d2e]">Brilliance</span>
-              </h2>
-            </div>
-
-            {/* Watch Cards Stack */}
-            <div className="space-y-2 sm:space-y-3.5 mb-2 sm:mb-6">
-              <AnimatePresence mode="popLayout">
-                {rightCards.map((w, idx) => (
-                  <WatchCard
-                    key={w.id + "-" + w.model}
-                    watch={w}
-                    direction={direction}
-                    delay={idx * 0.08}
-                    onClick={() =>
-                      handleCardClick(watches.findIndex((item) => item.id === w.id))
-                    }
-                  />
-                ))}
-              </AnimatePresence>
-            </div>
-
-            {/* Navigation indicator */}
-            <div className="flex items-center justify-between text-[11px] tracking-[0.15em] text-[#1a4d2e]/40 font-medium pt-2">
-              <span>
-                Model {String(activeIndex + 1).padStart(2, "0")} /{" "}
-                {String(watches.length).padStart(2, "0")}
+            {/* Top Bar: Subheading + Navigation Arrows */}
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <span className="text-[11px] sm:text-xs font-semibold tracking-[0.25em] text-[#1a4d2e]/80 uppercase">
+                Our Models
               </span>
-              <span>Click arrow to view next model</span>
+
+              {/* Navigation Arrows */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handlePrev}
+                  disabled={activeIndex === 0}
+                  className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full border border-black/10 flex items-center justify-center transition-all duration-300 ${
+                    activeIndex === 0
+                      ? "opacity-30 cursor-not-allowed bg-transparent text-black/40"
+                      : "opacity-100 hover:bg-[#1a4d2e] hover:text-white hover:border-[#1a4d2e] bg-white text-black/80 shadow-sm"
+                  }`}
+                  aria-label="Previous Watch"
+                >
+                  <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
+                <button
+                  onClick={handleNext}
+                  disabled={activeIndex === watches.length - 1}
+                  className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full border border-black/10 flex items-center justify-center transition-all duration-300 ${
+                    activeIndex === watches.length - 1
+                      ? "opacity-30 cursor-not-allowed bg-transparent text-black/40"
+                      : "opacity-100 hover:bg-[#1a4d2e] hover:text-white hover:border-[#1a4d2e] bg-white text-black/80 shadow-sm"
+                  }`}
+                  aria-label="Next Watch"
+                >
+                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Main Title */}
+            <h2
+              className="text-3xl sm:text-5xl lg:text-6xl font-serif text-[#1a1a1a] font-normal leading-[1.1] mb-6 sm:mb-8"
+              style={{ fontFamily: "var(--font-playfair)" }}
+            >
+              Pure <span className="text-[#1a4d2e] font-semibold">Brilliance</span>
+            </h2>
+
+            {/* Other Models Stack */}
+            <div className="flex flex-col gap-3 sm:gap-4">
+              {watches.map((watch, index) => {
+                if (index === activeIndex) return null;
+
+                return (
+                  <motion.div
+                    key={watch.id}
+                    onClick={() => handleCardClick(index)}
+                    whileHover={{ x: 6 }}
+                    transition={{ duration: 0.2 }}
+                    className="group relative flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-white/70 border border-black/5 backdrop-blur-md cursor-pointer hover:bg-white hover:shadow-lg hover:border-[#1a4d2e]/30 transition-all duration-300"
+                  >
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      {/* Thumbnail Container */}
+                      <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-[#f2efe9] overflow-hidden flex items-center justify-center p-1 group-hover:bg-[#e8e4db] transition-colors">
+                        <Image
+                          src={watch.image}
+                          alt={watch.name}
+                          width={60}
+                          height={60}
+                          className="object-contain w-full h-full transform group-hover:scale-110 transition-transform duration-300"
+                        />
+                      </div>
+
+                      {/* Text details */}
+                      <div className="flex flex-col">
+                        <h4 className="text-xs sm:text-sm font-bold text-[#1a1a1a] group-hover:text-[#1a4d2e] transition-colors">
+                          {watch.tag} • {watch.material}
+                        </h4>
+                        <p className="text-[10px] sm:text-xs text-neutral-500 font-medium">
+                          {watch.name} — {watch.dial}
+                        </p>
+                        <span className="text-xs sm:text-sm font-semibold text-[#1a4d2e] mt-0.5">
+                          {watch.price}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Arrow Indicator */}
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center text-neutral-400 group-hover:text-[#1a4d2e] group-hover:translate-x-1 transition-all">
+                      <ChevronRight className="w-4 h-4" />
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* Bottom Footer Note */}
+            <div className="mt-6 sm:mt-8 flex items-center justify-between text-[11px] sm:text-xs text-neutral-400 font-medium">
+              <span>Model 01 / 03</span>
+              <span className="hidden sm:inline">Click arrow to view next model</span>
             </div>
           </motion.div>
 

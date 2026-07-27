@@ -1,6 +1,7 @@
 import HeroSection from "@/components/HeroSection";
 import Navbar from "@/components/Navbar";
 import ProductShowcase from "@/components/ProductShowcase";
+import WatchBreakdownSection from "@/components/WatchBreakdownSection";
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
       <Navbar />
       <HeroSection />
       <ProductShowcase />
+      <WatchBreakdownSection />
     </main>
   );
 }
