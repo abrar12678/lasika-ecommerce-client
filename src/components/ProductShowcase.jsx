@@ -53,10 +53,10 @@ const watches = [
    ───────────────────────────────────────────── */
 function FloatingLabel({ text, position, delay = 0, phase2 }) {
   const posClasses = {
-    tl: "top-[10%] left-[0%] sm:top-[4%] sm:left-[2%] md:-top-[10%] md:-left-[6%] lg:-top-[20%] lg:-left-[12%]",
-    tr: "top-[10%] right-[0%] sm:top-[4%] sm:right-[2%] md:-top-[10%] md:-right-[6%] lg:-top-[20%] lg:-right-[12%]",
-    bl: "bottom-[2%] -left-[1%] sm:bottom-[16%] sm:left-[2%] md:-bottom-[4%] md:-left-[8%] lg:-bottom-[16%] lg:-left-[14%]",
-    br: "bottom-[2%] -right-[1%] sm:bottom-[16%] sm:right-[2%] md:-bottom-[4%] md:-right-[8%] lg:-bottom-[16%] lg:-right-[14%]",
+    tl: "top-[2%] left-[2%] sm:top-[4%] sm:left-[4%]",
+    tr: "top-[2%] right-[2%] sm:top-[4%] sm:right-[4%]",
+    bl: "bottom-[4%] left-[2%] sm:bottom-[6%] sm:left-[4%]",
+    br: "bottom-[4%] right-[2%] sm:bottom-[6%] sm:right-[4%]",
   };
 
   return (
@@ -251,7 +251,7 @@ export default function ProductShowcase() {
     <section
       ref={sectionRef}
       id="showcase"
-      className="relative h-screen min-h-screen flex flex-col justify-center bg-[#faf9f6] overflow-hidden pt-16 pb-4 sm:py-12 lg:py-0 z-10 snap-start snap-always"
+      className="relative min-h-screen flex flex-col justify-center bg-[#faf9f6] overflow-hidden pt-16 pb-4 sm:py-12 lg:py-0 z-10 snap-start snap-always"
     >
       {/* Background glow */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(26,77,46,0.03)_0%,_transparent_60%)] pointer-events-none" />

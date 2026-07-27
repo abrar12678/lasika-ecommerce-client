@@ -317,7 +317,7 @@ export default function HeroSection() {
     <section
       ref={containerRef}
       id="hero"
-      className="relative h-screen min-h-screen overflow-visible flex items-center justify-center pt-12 sm:pt-20 z-20 snap-start snap-always"
+      className="relative min-h-screen overflow-visible flex items-center justify-center pt-12 sm:pt-20 z-20 snap-start snap-always"
     >
       {/* BACKGROUND — white → phase 2 gradient */}
       <motion.div
