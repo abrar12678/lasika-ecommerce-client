@@ -180,8 +180,8 @@ export default function WatchBreakdownSection() {
   // STEP 1: Pillow + Watch glides from Showcase position to Breakdown center at scale 1.0
   const pillowX = useTransform(smoothProgress, [0, 0.55], [offsets.x, 0]);
   const pillowY = useTransform(smoothProgress, [0, 0.55], [offsets.y, 0]);
-  // Smooth crossfade — breakdown pillow fades IN as showcase pillow leaves
-  const pillowOpacity = useTransform(smoothProgress, [0, 0.20], [0, 1.0]);
+  // Smooth crossfade — breakdown pillow stays 100% invisible (opacity 0) while in Showcase, then fades IN as user scrolls down
+  const pillowOpacity = useTransform(smoothProgress, [0.08, 0.30], [0, 1.0]);
 
   // STEP 2: THEN once centered in Breakdown section (0.55 -> 0.90), it ZOOMS IN to 2.4x!
   const pillowScale = useTransform(smoothProgress, [0.55, 0.90], [1.0, 2.4]);

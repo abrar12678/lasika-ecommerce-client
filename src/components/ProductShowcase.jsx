@@ -251,8 +251,8 @@ export default function ProductShowcase() {
     target: sectionRef,
     offset: ["start start", "end start"],
   });
-  // As user scrolls down past ProductShowcase towards Breakdown section, showcase pillow & watch leave Showcase!
-  const showcasePillowOpacity = useTransform(showcaseExitProgress, [0, 0.25], [1, 0]);
+  // As user scrolls down past ProductShowcase towards Breakdown section, showcase pillow leaves Showcase cleanly!
+  const showcasePillowOpacity = useTransform(showcaseExitProgress, [0.08, 0.30], [1, 0]);
 
   return (
     <section
