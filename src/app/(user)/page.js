@@ -4,7 +4,7 @@ import ProductShowcase from "@/components/ProductShowcase";
 
 export default function Home() {
   return (
-    <main className="w-full relative bg-[#faf9f6] overflow-x-hidden">
+    <main className="w-full relative bg-[#faf9f6]">
       <Navbar />
       <HeroSection />
       <ProductShowcase />

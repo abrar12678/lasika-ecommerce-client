@@ -251,7 +251,7 @@ export default function ProductShowcase() {
     <section
       ref={sectionRef}
       id="showcase"
-      className="relative min-h-screen flex flex-col justify-center bg-[#faf9f6] overflow-hidden pt-16 pb-4 sm:py-12 lg:py-0 z-10 snap-start snap-always"
+      className="relative min-h-screen flex flex-col justify-center bg-[#faf9f6] pt-16 pb-4 sm:py-12 lg:py-0 z-10 snap-start snap-always"
     >
       {/* Background glow */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(26,77,46,0.03)_0%,_transparent_60%)] pointer-events-none" />
