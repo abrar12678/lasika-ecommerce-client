@@ -247,13 +247,6 @@ export default function ProductShowcase() {
     }),
   };
 
-  const { scrollYProgress: showcaseExitProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
-  });
-  // As user scrolls down past ProductShowcase towards Breakdown section, showcase pillow leaves Showcase cleanly!
-  const showcasePillowOpacity = useTransform(showcaseExitProgress, [0.08, 0.30], [1, 0]);
-
   return (
     <section
       ref={sectionRef}
@@ -272,7 +265,7 @@ export default function ProductShowcase() {
           <div className="relative w-full lg:w-[52%] flex items-center justify-center pt-6 pb-2 sm:pt-0 sm:pb-0 min-h-[210px] sm:min-h-[440px] lg:min-h-[460px]">
             
             {/* Pillow & Watch Container Area */}
-            <motion.div style={{ opacity: showcasePillowOpacity }} id="showcase-pillow-container" className="relative w-full max-w-[480px] aspect-[4/3] flex items-center justify-center">
+            <motion.div id="showcase-pillow-container" className="relative w-full max-w-[480px] aspect-[4/3] flex items-center justify-center">
 
               {/* Phase 2: Left Spec Texts — Revealed with Hero section overflow-hidden text reveal style */}
               <FloatingLabel
