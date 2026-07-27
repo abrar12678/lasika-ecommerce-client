@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
-import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValueEvent, useSpring } from "framer-motion";
 
 /* ─────────────────────────────────────────────
    Phase 2 — Detail card (top-left / bottom-right)
@@ -183,6 +183,14 @@ export default function HeroSection() {
     offset: ["start start", "end start"],
   });
 
+  // ═══ Spring-smoothed scroll progress ═══
+  // Responsive spring — fast enough to track scroll, smooth enough to avoid jank.
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 250,
+    damping: 35,
+    mass: 0.4,
+  });
+
   /* Text & CTA scroll parallax (moves down slower — stays behind) */
   const textY = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
@@ -207,8 +215,8 @@ export default function HeroSection() {
       const heroCenterY = heroRect.top + scrollY + heroRect.height / 2;
       const heroCenterX = heroRect.left + heroRect.width / 2;
 
-      // The un-transformed target position on the pillow in document coordinates
-      const pillowCenterY = pillowRect.top + scrollY + pillowRect.height * (isSm ? 0.46 : 0.52);
+      // The un-transformed target position on the pillow in document coordinates (micro-tuned slightly lower)
+      const pillowCenterY = pillowRect.top + scrollY + pillowRect.height * (isSm ? 0.50 : 0.56) + 5;
       const pillowCenterX = pillowRect.left + pillowRect.width / 2;
 
       // Exact document-relative distance between hero center and pillow target
@@ -219,7 +227,7 @@ export default function HeroSection() {
     } else {
       setOffsets({
         x: isDesktop ? -285 : 0,
-        y: isDesktop ? 780 : isSm ? 650 : 540,
+        y: isDesktop ? 805 : isSm ? 672 : 558,
         scale,
       });
     }
@@ -234,22 +242,25 @@ export default function HeroSection() {
     }
   }, [phase2]);
 
+  // Only recalculate offsets on resize, NOT on scroll.
+  // Recalculating on scroll caused the watch to "suddenly drop" because
+  // getBoundingClientRect + setState created a 1-frame jitter on every scroll event.
+  // The offsets are document-constant (offsetTop-based) so they never change while scrolling.
   useEffect(() => {
     window.addEventListener("resize", calculateTarget);
-    window.addEventListener("scroll", calculateTarget, { passive: true });
     return () => {
       window.removeEventListener("resize", calculateTarget);
-      window.removeEventListener("scroll", calculateTarget);
     };
   }, []);
 
-  /* Watch: moves DOWN and LEFT (desktop) or straight DOWN (mobile/tablet) to land DEAD CENTER on pillow! */
-  const watchY = useTransform(scrollYProgress, [0, 1], [0, offsets.y]);
-  const watchX = useTransform(scrollYProgress, [0, 1], [0, offsets.x]);
+  /* Watch: eased transform curves — stays near start, accelerates mid-flight, decelerates at landing.
+     Combined with the soft spring, this eliminates any visible "sudden drop" on scroll-snap. */
+  const watchY = useTransform(smoothProgress, [0, 0.35, 0.7, 1], [0, offsets.y * 0.05, offsets.y * 0.55, offsets.y]);
+  const watchX = useTransform(smoothProgress, [0, 0.35, 0.7, 1], [0, offsets.x * 0.05, offsets.x * 0.55, offsets.x]);
   /* Watch scales to match pillow size responsively */
-  const watchScale = useTransform(scrollYProgress, [0, 1], [1, offsets.scale]);
+  const watchScale = useTransform(smoothProgress, [0, 0.4, 1], [1, 1 - (1 - offsets.scale) * 0.1, offsets.scale]);
   /* Watch rotates smoothly back to 0deg to sit upright on pillow */
-  const watchRotate = useTransform(scrollYProgress, [0, 1], [0, -8]);
+  const watchRotate = useTransform(smoothProgress, [0, 0.4, 1], [0, -8 * 0.1, -8]);
   /* Watch stays 100% visible on top of pillow until user clicks carousel arrow */
   const watchOpacity = useTransform(scrollYProgress, [0, 1], [1, 1]);
   /* Dark overlay */
