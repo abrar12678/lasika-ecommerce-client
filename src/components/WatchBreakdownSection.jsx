@@ -177,20 +177,16 @@ export default function WatchBreakdownSection() {
   // SCROLL-LINKED TRANSFORMS
   // ═══════════════════════════════════════════════════
 
-  // STEP 1: Pillow + Watch glides from Showcase to Breakdown center
-  // Eased curve: stays near start, accelerates mid-flight, decelerates at landing
-  const pillowX = useTransform(smoothProgress, [0, 0.3, 0.65, 1], [offsets.x, offsets.x * 0.92, offsets.x * 0.3, 0]);
-  const pillowY = useTransform(smoothProgress, [0, 0.3, 0.65, 1], [offsets.y, offsets.y * 0.92, offsets.y * 0.3, 0]);
-  // Smooth crossfade — breakdown pillow fades IN as showcase pillow fades OUT
-  const pillowOpacity = useTransform(
-    smoothProgress,
-    [0.15, 0.3, 0.5],
-    [0, 0.9, 1]
-  );
-  // STEP 2: Scroll-linked zoom — scale increases continuously with scroll
-  const pillowScale = useTransform(smoothProgress, [0.25, 0.85], [1.0, 2.4]);
-  // Watch counter-scale — shrinks relative to pillow so pillow visually dominates
-  const watchRelativeScale = useTransform(smoothProgress, [0.25, 0.85], [1.0, 0.82]);
+  // STEP 1: Pillow + Watch glides from Showcase position to Breakdown center at scale 1.0
+  const pillowX = useTransform(smoothProgress, [0, 0.55], [offsets.x, 0]);
+  const pillowY = useTransform(smoothProgress, [0, 0.55], [offsets.y, 0]);
+  // Smooth crossfade — breakdown pillow fades IN as showcase pillow leaves
+  const pillowOpacity = useTransform(smoothProgress, [0, 0.20], [0, 1.0]);
+
+  // STEP 2: THEN once centered in Breakdown section (0.55 -> 0.90), it ZOOMS IN to 2.4x!
+  const pillowScale = useTransform(smoothProgress, [0.55, 0.90], [1.0, 2.4]);
+  // Watch counter-scale — shrinks slightly relative to pillow so pillow visually dominates
+  const watchRelativeScale = useTransform(smoothProgress, [0.55, 0.90], [1.0, 0.82]);
 
 
   // ═══════════════════════════════════════════════════
@@ -259,7 +255,7 @@ export default function WatchBreakdownSection() {
     <section
       ref={containerRef}
       id="watch-breakdown"
-      className="relative h-screen min-h-screen w-full flex flex-col items-center justify-center bg-[#faf9f6] overflow-visible z-20 snap-start snap-always py-6 px-4 sm:px-8 select-none border-none outline-none"
+      className="relative h-screen max-h-screen min-h-screen flex flex-col justify-center bg-[#faf9f6] overflow-hidden pt-16 pb-4 sm:py-12 lg:py-0 z-20 snap-start snap-always select-none border-none outline-none"
       aria-label="Interactive Feature Breakdown"
     >
       {/* ═══════════════════════════════════════════════════
