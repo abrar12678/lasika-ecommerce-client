@@ -1,6 +1,8 @@
 import HeroSection from "@/components/HeroSection";
 import Navbar from "@/components/Navbar";
 import ProductShowcase from "@/components/ProductShowcase";
+import WatchDetail from "@/components/WatchDetail";
+import WatchBoxSection from "@/components/WatchBoxSection";
 
 export default function Home() {
   return (
@@ -8,6 +10,8 @@ export default function Home() {
       <Navbar />
       <HeroSection />
       <ProductShowcase />
+      <WatchDetail />
+      <WatchBoxSection />
     </main>
   );
 }

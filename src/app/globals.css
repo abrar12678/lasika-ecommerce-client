@@ -12,14 +12,12 @@
   background-clip: text;
 }
 
-/* Ensure single root window scrollbar ONLY + Section Scroll Snapping */
-html,
-body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
+/* Single root viewport scrollbar + Section Scroll Snapping */
+html {
   scroll-snap-type: y proximity;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
 }

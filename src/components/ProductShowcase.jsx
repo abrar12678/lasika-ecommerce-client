@@ -8,6 +8,7 @@ import {
   useInView,
   useScroll,
   useTransform,
+  useMotionValueEvent,
 } from "framer-motion";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 
@@ -53,10 +54,10 @@ const watches = [
    ───────────────────────────────────────────── */
 function FloatingLabel({ text, position, delay = 0, phase2 }) {
   const posClasses = {
-    tl: "top-[2%] left-[2%] sm:top-[4%] sm:left-[4%]",
-    tr: "top-[2%] right-[2%] sm:top-[4%] sm:right-[4%]",
-    bl: "bottom-[4%] left-[2%] sm:bottom-[6%] sm:left-[4%]",
-    br: "bottom-[4%] right-[2%] sm:bottom-[6%] sm:right-[4%]",
+    tl: "top-[10%] left-[0%] sm:top-[4%] sm:left-[2%] md:-top-[10%] md:-left-[6%] lg:-top-[20%] lg:-left-[12%]",
+    tr: "top-[10%] right-[0%] sm:top-[4%] sm:right-[2%] md:-top-[10%] md:-right-[6%] lg:-top-[20%] lg:-right-[12%]",
+    bl: "bottom-[2%] -left-[1%] sm:bottom-[16%] sm:left-[2%] md:-bottom-[4%] md:-left-[8%] lg:-bottom-[16%] lg:-left-[14%]",
+    br: "bottom-[2%] -right-[1%] sm:bottom-[16%] sm:right-[2%] md:-bottom-[4%] md:-right-[8%] lg:-bottom-[16%] lg:-right-[14%]",
   };
 
   return (
@@ -140,9 +141,20 @@ export default function ProductShowcase() {
   const [direction, setDirection] = useState(1);
   const [showcasePhase2, setShowcasePhase2] = useState(false);
   const [carouselActive, setCarouselActive] = useState(false);
+  const [isScrollingAway, setIsScrollingAway] = useState(false);
 
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: false, margin: "-120px" });
+
+  /* ═══ Detect when user scrolls away from showcase (toward detail section) ═══ */
+  const { scrollYProgress: showcaseScrollProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  useMotionValueEvent(showcaseScrollProgress, "change", (latest) => {
+    setIsScrollingAway(latest > 0.05);
+  });
 
   /* Trigger Phase 2 (Pillow Zoom & Text Reveal) after Phase 1 entrance */
   useEffect(() => {
@@ -247,11 +259,18 @@ export default function ProductShowcase() {
     }),
   };
 
+  const { scrollYProgress: showcaseExitProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  // Fades out pillow container as user scrolls past Showcase into Detail section
+  const showcasePillowOpacity = useTransform(showcaseExitProgress, [0, 0.45, 0.9], [1, 1, 0]);
+
   return (
     <section
       ref={sectionRef}
       id="showcase"
-      className="relative min-h-screen flex flex-col justify-center bg-[#faf9f6] pt-16 pb-4 sm:py-12 lg:py-0 z-10 snap-start snap-always"
+      className="relative h-screen min-h-screen flex flex-col justify-center bg-[#faf9f6] overflow-hidden pt-16 pb-4 sm:py-12 lg:py-0 z-10 snap-start snap-always"
     >
       {/* Background glow */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(26,77,46,0.03)_0%,_transparent_60%)] pointer-events-none" />
@@ -265,7 +284,7 @@ export default function ProductShowcase() {
           <div className="relative w-full lg:w-[52%] flex items-center justify-center pt-6 pb-2 sm:pt-0 sm:pb-0 min-h-[210px] sm:min-h-[440px] lg:min-h-[460px]">
             
             {/* Pillow & Watch Container Area */}
-            <motion.div id="showcase-pillow-container" className="relative w-full max-w-[480px] aspect-[4/3] flex items-center justify-center">
+            <motion.div style={{ opacity: showcasePillowOpacity }} id="showcase-pillow-container" className="relative w-full max-w-[480px] aspect-[4/3] flex items-center justify-center">
 
               {/* Phase 2: Left Spec Texts — Revealed with Hero section overflow-hidden text reveal style */}
               <FloatingLabel
@@ -301,11 +320,13 @@ export default function ProductShowcase() {
                 id="showcase-pillow-img"
                 initial={{ opacity: 0, x: -60, y: -30, scale: 0.85, rotate: -8 }}
                 animate={
-                  isInView
-                    ? showcasePhase2
-                      ? { opacity: 1, x: 0, y: 0, scale: 1.08, rotate: 0 }
-                      : { opacity: 1, x: 0, y: 0, scale: 1, rotate: 0 }
-                    : { opacity: 0, x: -60, y: -30, scale: 0.85, rotate: -8 }
+                  isScrollingAway
+                    ? { opacity: 0, x: 0, y: 0, scale: 1, rotate: 0 }
+                    : isInView
+                      ? showcasePhase2
+                        ? { opacity: 1, x: 0, y: 0, scale: 1.08, rotate: 0 }
+                        : { opacity: 1, x: 0, y: 0, scale: 1, rotate: 0 }
+                      : { opacity: 0, x: -60, y: -30, scale: 0.85, rotate: -8 }
                 }
                 transition={{
                   duration: 0.9,
@@ -332,7 +353,7 @@ export default function ProductShowcase() {
               */}
               <div className="relative z-20 w-full h-full flex items-center justify-center overflow-visible">
                 <AnimatePresence mode="popLayout" custom={direction}>
-                  {carouselActive && (
+                  {carouselActive && !isScrollingAway && (
                     <motion.div
                       key={activeWatch.id + "-" + activeIndex}
                       custom={direction}

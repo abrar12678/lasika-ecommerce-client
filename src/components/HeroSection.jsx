@@ -170,6 +170,9 @@ export default function HeroSection() {
   const [phase1, setPhase1] = useState(false);
   const [phase2, setPhase2] = useState(false);
   const [bgPhase, setBgPhase] = useState(false);
+  const [offsets, setOffsets] = useState({ x: 0, y: 0, scale: 0.79 });
+  const [detailOffsets, setDetailOffsets] = useState({ x: 0, y: 0 });
+  const [boxOffsets, setBoxOffsets] = useState({ x: 0, y: 0 });
 
   const scrollToShowcase = () => {
     const showcase = document.getElementById("showcase");
@@ -183,22 +186,14 @@ export default function HeroSection() {
     offset: ["start start", "end start"],
   });
 
-  // ═══ Spring-smoothed scroll progress ═══
-  // Responsive spring — fast enough to track scroll, smooth enough to avoid jank.
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 250,
-    damping: 35,
-    mass: 0.4,
-  });
-
   /* Text & CTA scroll parallax (moves down slower — stays behind) */
   const textY = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
 
-  const [offsets, setOffsets] = useState({ x: 0, y: 0, scale: 0.79 });
-
   const calculateTarget = () => {
     const pillowContainer = document.getElementById("showcase-pillow-container");
+    const detailElement = document.getElementById("detail");
+    const boxContainer = document.getElementById("watch-box-target") || document.getElementById("box-pillow-container");
     const heroElement = document.getElementById("hero");
     const isDesktop = window.innerWidth >= 1024;
     const isMd = window.innerWidth >= 768;
@@ -206,30 +201,61 @@ export default function HeroSection() {
 
     const scale = isDesktop ? 0.79 : isMd ? 0.97 : isSm ? 0.91 : 1.04;
 
-    if (pillowContainer && heroElement) {
-      const pillowRect = pillowContainer.getBoundingClientRect();
+    if (heroElement) {
       const heroRect = heroElement.getBoundingClientRect();
       const scrollY = window.scrollY || window.pageYOffset;
-
-      // The un-transformed center of hero section in document coordinates
       const heroCenterY = heroRect.top + scrollY + heroRect.height / 2;
       const heroCenterX = heroRect.left + heroRect.width / 2;
 
-      // The un-transformed target position on the pillow in document coordinates (micro-tuned slightly lower)
-      const pillowCenterY = pillowRect.top + scrollY + pillowRect.height * (isSm ? 0.50 : 0.56) + 5;
-      const pillowCenterX = pillowRect.left + pillowRect.width / 2;
+      // 1. Showcase pillow target offset
+      if (pillowContainer) {
+        const pillowRect = pillowContainer.getBoundingClientRect();
+        const pillowCenterY = pillowRect.top + scrollY + pillowRect.height * (isSm ? 0.50 : 0.56) + 5;
+        const pillowCenterX = pillowRect.left + pillowRect.width / 2;
+        setOffsets({
+          x: pillowCenterX - heroCenterX,
+          y: pillowCenterY - heroCenterY,
+          scale,
+        });
+      } else {
+        setOffsets({
+          x: isDesktop ? -285 : 0,
+          y: isDesktop ? 805 : isSm ? 672 : 558,
+          scale,
+        });
+      }
 
-      // Exact document-relative distance between hero center and pillow target
-      const rawDeltaY = pillowCenterY - heroCenterY;
-      const rawDeltaX = pillowCenterX - heroCenterX;
+      // 2. Detail section center target offset
+      if (detailElement) {
+        const detailRect = detailElement.getBoundingClientRect();
+        const detailCenterY = detailRect.top + scrollY + detailRect.height / 2 + 45;
+        const detailCenterX = detailRect.left + detailRect.width / 2;
+        setDetailOffsets({
+          x: detailCenterX - heroCenterX,
+          y: detailCenterY - heroCenterY,
+        });
+      } else {
+        setDetailOffsets({
+          x: 0,
+          y: (heroRect.height || window.innerHeight) * 2,
+        });
+      }
 
-      setOffsets({ x: rawDeltaX, y: rawDeltaY, scale });
-    } else {
-      setOffsets({
-        x: isDesktop ? -285 : 0,
-        y: isDesktop ? 805 : isSm ? 672 : 558,
-        scale,
-      });
+      // 3. Watch Box section center target offset
+      if (boxContainer) {
+        const boxRect = boxContainer.getBoundingClientRect();
+        const boxCenterY = boxRect.top + scrollY + boxRect.height / 2;
+        const boxCenterX = boxRect.left + boxRect.width / 2;
+        setBoxOffsets({
+          x: boxCenterX - heroCenterX,
+          y: boxCenterY - heroCenterY,
+        });
+      } else {
+        setBoxOffsets({
+          x: 0,
+          y: (heroRect.height || window.innerHeight) * 3,
+        });
+      }
     }
   };
 
@@ -243,9 +269,6 @@ export default function HeroSection() {
   }, [phase2]);
 
   // Only recalculate offsets on resize, NOT on scroll.
-  // Recalculating on scroll caused the watch to "suddenly drop" because
-  // getBoundingClientRect + setState created a 1-frame jitter on every scroll event.
-  // The offsets are document-constant (offsetTop-based) so they never change while scrolling.
   useEffect(() => {
     window.addEventListener("resize", calculateTarget);
     return () => {
@@ -253,16 +276,105 @@ export default function HeroSection() {
     };
   }, []);
 
-  /* Watch: eased transform curves — stays near start, accelerates mid-flight, decelerates at landing.
-     Combined with the soft spring, this eliminates any visible "sudden drop" on scroll-snap. */
-  const watchY = useTransform(smoothProgress, [0, 0.35, 0.7, 1], [0, offsets.y * 0.05, offsets.y * 0.55, offsets.y]);
-  const watchX = useTransform(smoothProgress, [0, 0.35, 0.7, 1], [0, offsets.x * 0.05, offsets.x * 0.55, offsets.x]);
-  /* Watch scales to match pillow size responsively */
-  const watchScale = useTransform(smoothProgress, [0, 0.4, 1], [1, 1 - (1 - offsets.scale) * 0.1, offsets.scale]);
-  /* Watch rotates smoothly back to 0deg to sit upright on pillow */
-  const watchRotate = useTransform(smoothProgress, [0, 0.4, 1], [0, -8 * 0.1, -8]);
-  /* Watch stays 100% visible on top of pillow until user clicks carousel arrow */
-  const watchOpacity = useTransform(scrollYProgress, [0, 1], [1, 1]);
+  const [vh, setVh] = useState(800);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setVh(window.innerHeight);
+      const handleResize = () => setVh(window.innerHeight);
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
+  }, []);
+
+  const { scrollY } = useScroll();
+
+  /* Smooth scrollY spring for silky unbroken watch flight */
+  const smoothScrollY = useSpring(scrollY, {
+    stiffness: 200,
+    damping: 30,
+    mass: 0.4,
+  });
+
+  /* Watch flight across all 4 sections: Hero (0) -> Showcase (vh) -> Detail (2vh) -> Box Reveal (3vh) */
+  const watchY = useTransform(
+    smoothScrollY,
+    [0, vh * 0.35, vh * 0.7, vh, vh * 1.35, vh * 1.7, vh * 2.0, vh * 2.35, vh * 2.7, vh * 3.0],
+    [
+      0,
+      offsets.y * 0.05,
+      offsets.y * 0.55,
+      offsets.y,
+      offsets.y + (detailOffsets.y - offsets.y) * 0.1,
+      offsets.y + (detailOffsets.y - offsets.y) * 0.6,
+      detailOffsets.y,
+      detailOffsets.y + (boxOffsets.y - detailOffsets.y) * 0.1,
+      detailOffsets.y + (boxOffsets.y - detailOffsets.y) * 0.6,
+      boxOffsets.y,
+    ]
+  );
+
+  const watchX = useTransform(
+    smoothScrollY,
+    [0, vh * 0.35, vh * 0.7, vh, vh * 1.35, vh * 1.7, vh * 2.0, vh * 2.35, vh * 2.7, vh * 3.0],
+    [
+      0,
+      offsets.x * 0.05,
+      offsets.x * 0.55,
+      offsets.x,
+      offsets.x + (detailOffsets.x - offsets.x) * 0.1,
+      offsets.x + (detailOffsets.x - offsets.x) * 0.6,
+      detailOffsets.x,
+      detailOffsets.x + (boxOffsets.x - detailOffsets.x) * 0.1,
+      detailOffsets.x + (boxOffsets.x - detailOffsets.x) * 0.6,
+      boxOffsets.x,
+    ]
+  );
+
+  const [detailZoomed, setDetailZoomed] = useState(false);
+
+  useEffect(() => {
+    const handleZoomEvent = (e) => {
+      setDetailZoomed(e.detail.zoomed);
+    };
+    window.addEventListener("detail-zoom-trigger", handleZoomEvent);
+    return () => window.removeEventListener("detail-zoom-trigger", handleZoomEvent);
+  }, []);
+
+  /* Watch scroll scale base calculation */
+  const watchScrollScale = useTransform(
+    smoothScrollY,
+    [0, vh * 0.4, vh, vh * 1.35, vh * 2.0, vh * 3.0],
+    [1, 1 - (1 - offsets.scale) * 0.1, offsets.scale, offsets.scale, offsets.scale, 0.65]
+  );
+
+  /* Dynamically scale watch to 1.55x when 1.0s timer triggers detailZoomed, otherwise use scroll scale */
+  const targetWatchScale = useTransform(
+    smoothScrollY,
+    (latest) => {
+      const isDetailSection = latest >= vh * 1.6 && latest < vh * 2.7;
+      if (isDetailSection && detailZoomed) {
+        return 1.55;
+      }
+      return watchScrollScale.get();
+    }
+  );
+
+  /* Silky smooth spring interpolation for watch scale zoom */
+  const watchScale = useSpring(targetWatchScale, {
+    stiffness: 120,
+    damping: 24,
+    mass: 0.5,
+  });
+
+  /* Watch rotates smoothly from 8deg in Hero -> 0deg (straight) on Showcase pillow, staying straight in Detail & Box Reveal */
+  const watchRotate = useTransform(
+    smoothScrollY,
+    [0, vh * 0.4, vh, vh * 2.0, vh * 3.0],
+    [0, -8 * 0.1, -8, -8, -8]
+  );
+
+  /* Main watch stays 100% visible throughout all sections in front of screen */
+  const watchOpacity = useTransform(scrollY, [0, vh * 3.5], [1, 1]);
   /* Dark overlay */
   const overlayOpacity = useTransform(scrollYProgress, [0, 0.6], [0, 0.12]);
 
@@ -317,7 +429,7 @@ export default function HeroSection() {
     <section
       ref={containerRef}
       id="hero"
-      className="relative min-h-screen flex items-center justify-center pt-12 sm:pt-20 z-20 snap-start snap-always"
+      className="relative h-screen min-h-screen overflow-visible flex items-center justify-center pt-12 sm:pt-20 z-20 snap-start snap-always"
     >
       {/* BACKGROUND — white → phase 2 gradient */}
       <motion.div
@@ -391,7 +503,7 @@ export default function HeroSection() {
             rotate: watchRotate,
             opacity: watchOpacity,
           }}
-          className="absolute inset-0 z-30 pointer-events-none"
+          className="absolute inset-0 z-[50] pointer-events-none"
         >
           <div className="absolute inset-0 flex items-center justify-center">
             <motion.div
