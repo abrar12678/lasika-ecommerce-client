@@ -41,13 +41,13 @@ function DetailCard({ src, label, subtitle, position, phase2 }) {
         : "bottom-[12%] right-[4%] sm:bottom-[10%] sm:right-[5%] md:bottom-[12%] md:right-[6%] lg:bottom-[10%] lg:right-[6%]"
         }`}
     >
-      {/* Card — WHITE TRANSPARENT */}
+      {/* Card — WHITE TRANSPARENT WITH LUXURY FLOATING SHADOW */}
       <div
         className="relative w-[108px] sm:w-[175px] md:w-[180px] lg:w-[230px]"
         style={{
-          background: "rgba(255, 255, 255, 0.60)",
-          border: "1px solid rgba(255, 255, 255, 0.70)",
-          boxShadow: "2px 4px 20px rgba(0, 0, 0, 0.04)",
+          background: "rgba(255, 255, 255, 0.70)",
+          border: "1px solid rgba(255, 255, 255, 0.85)",
+          boxShadow: "0 18px 40px -8px rgba(0, 0, 0, 0.16), 0 6px 16px rgba(0, 0, 0, 0.08)",
         }}
       >
         {/* ── Div 1: Image area — GLASS TRANSPARENT (Identical fixed height on mobile) ── */}
@@ -67,7 +67,7 @@ function DetailCard({ src, label, subtitle, position, phase2 }) {
             alt={label || "Watch detail card"}
             width={180}
             height={180}
-            className="max-h-[74px] sm:max-h-none w-auto sm:w-full h-auto object-contain block mx-auto"
+            className="max-h-[74px] sm:max-h-none w-auto sm:w-full h-auto object-contain block mx-auto drop-shadow-[0_10px_20px_rgba(0,0,0,0.18)]"
             sizes="(max-width: 640px) 90px, (max-width: 768px) 155px, (max-width: 1024px) 180px, 195px"
           />
         </div>
@@ -373,8 +373,8 @@ export default function HeroSection() {
     [0, -8 * 0.1, -8, -8, -8]
   );
 
-  /* Main watch stays 100% visible throughout all sections in front of screen */
-  const watchOpacity = useTransform(scrollY, [0, vh * 3.5], [1, 1]);
+  /* Main watch stays 100% visible through section 3, then fades out as section 4 GSAP Box Docking takes over */
+  const watchOpacity = useTransform(scrollY, [0, vh * 2.4, vh * 2.8], [1, 1, 0]);
   /* Dark overlay */
   const overlayOpacity = useTransform(scrollYProgress, [0, 0.6], [0, 0.12]);
 
@@ -431,25 +431,42 @@ export default function HeroSection() {
       id="hero"
       className="relative h-screen min-h-screen overflow-visible flex items-center justify-center pt-12 sm:pt-20 snap-start snap-always"
     >
-      {/* BACKGROUND — white → phase 2 gradient */}
+      {/* SVG Filter for Distressed/Grunge Stamp Texture */}
+      <svg className="hidden">
+        <filter id="grunge-stamp-texture">
+          <feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="3" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </svg>
+
+      {/* ── 1. Base Background: Transitions from #ffffff in Phase 1 to #e6ddc9 in Phase 2 ── */}
       <motion.div
         animate={{
-          background: bgPhase
-            ? "linear-gradient(160deg, rgba(235, 231, 219) 0%, rgba(220, 208, 186) 50%, rgba(235, 231, 219) 100%)"
-            : "#ffffff",
+          backgroundColor: bgPhase ? "#e6ddc9" : "#ffffff",
         }}
         transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute inset-0"
-      />
+        className="absolute inset-0 pointer-events-none z-0"
+      >
+        <motion.div
+          animate={{
+            opacity: bgPhase ? 1 : 0,
+          }}
+          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,252,245,0.9)_0%,_rgba(235,225,205,0.95)_55%,_#e6ddc9_100%)]"
+        />
+      </motion.div>
+
+      {/* ── 2. Paper / Noise Overlay (opacity: 0.05) for Matte Tactile Feel ── */}
+      <div className="absolute inset-0 opacity-[0.05] pointer-events-none z-0 mix-blend-overlay bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:16px_16px]" />
 
       {/* Dark overlay on scroll */}
       <motion.div
         style={{ opacity: overlayOpacity }}
-        className="absolute inset-0 bg-[#0a0a0a] pointer-events-none"
+        className="absolute inset-0 bg-[#0a0a0a] pointer-events-none z-10"
       />
 
-      {/* PHASE 1 — BACKGROUND HEADLINE TEXT */}
-      <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
+      {/* ── 4. Giant Bold Text Layer "OYSTER PERPETUAL" in Rolex Green (#004B23) (Z-Index: 1) ── */}
+      <div className="absolute inset-0 z-1 flex items-center justify-center pointer-events-none select-none">
         <div className="flex flex-col items-center">
           <div className="overflow-hidden">
             <motion.h1
@@ -460,8 +477,11 @@ export default function HeroSection() {
                 delay: 0.1,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className="text-[3rem] sm:text-[6rem] md:text-[6.5rem] lg:text-[10rem] xl:text-[12rem] font-normal tracking-[0.08em] text-[#1a4d2e] leading-none select-none"
-              style={{ fontFamily: "'Esthoria', serif" }}
+              className="text-[3.5rem] sm:text-[6.5rem] md:text-[8rem] lg:text-[10.5rem] xl:text-[12.5rem] font-black tracking-tight text-[#004B23] leading-none uppercase filter drop-shadow-sm"
+              style={{
+                fontFamily: "'Esthoria', serif",
+                filter: "url(#grunge-stamp-texture)",
+              }}
             >
               OYSTER
             </motion.h1>
@@ -475,8 +495,11 @@ export default function HeroSection() {
                 delay: 0.25,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className="text-[3rem] sm:text-[6rem] md:text-[6.5rem] lg:text-[10rem] xl:text-[12rem] font-normal tracking-[0.08em] text-[#1a4d2e] leading-none select-none"
-              style={{ fontFamily: "'Esthoria', serif" }}
+              className="text-[3.5rem] sm:text-[6.5rem] md:text-[8rem] lg:text-[10.5rem] xl:text-[12.5rem] font-black tracking-tight text-[#004B23] leading-none uppercase filter drop-shadow-sm -mt-2 sm:-mt-6"
+              style={{
+                fontFamily: "'Esthoria', serif",
+                filter: "url(#grunge-stamp-texture)",
+              }}
             >
               PERPETUAL
             </motion.h1>
@@ -523,12 +546,14 @@ export default function HeroSection() {
               }
               className="relative will-change-transform"
             >
+              {/* Ambient Ground Shadow under Watch */}
+              <div className="absolute top-[82%] left-1/2 -translate-x-1/2 w-[70%] h-[24px] bg-black/28 rounded-[100%] filter blur-xl pointer-events-none z-0" />
               <Image
                 src="/watches/hero-main-removebg-preview.png"
                 alt="LASIKA Perpetual — Luxury Timepiece"
                 width={520}
                 height={360}
-                className="relative z-10 w-[200px] sm:w-[340px] md:w-[360px] lg:w-[480px] h-auto drop-shadow-[0_25px_45px_rgba(0,0,0,0.25)]"
+                className="relative z-10 w-[200px] sm:w-[340px] md:w-[360px] lg:w-[480px] h-auto drop-shadow-[0_38px_65px_rgba(0,0,0,0.36)]"
                 priority
               />
             </motion.div>

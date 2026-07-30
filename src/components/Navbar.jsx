@@ -174,14 +174,14 @@ export default function Navbar() {
       <motion.div
         animate={{
           backgroundColor: scrolled
-            ? "rgba(10,10,10,0.92)"
-            : "rgba(10,10,10,0)",
+            ? "rgba(244, 239, 230, 0.85)"
+            : "rgba(244, 239, 230, 0)",
           backdropFilter: scrolled
-            ? "blur(20px) saturate(180%)"
+            ? "blur(16px) saturate(160%)"
             : "blur(0px) saturate(100%)",
           borderBottomColor: scrolled
-            ? "rgba(197,165,110,0.08)"
-            : "rgba(197,165,110,0)",
+            ? "rgba(10, 61, 30, 0.08)"
+            : "rgba(10, 61, 30, 0)",
         }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="absolute inset-0 border-b backdrop-blur-none"

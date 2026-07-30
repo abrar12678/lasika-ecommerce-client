@@ -270,10 +270,10 @@ export default function ProductShowcase() {
     <section
       ref={sectionRef}
       id="showcase"
-      className="relative h-screen min-h-screen flex flex-col justify-center bg-[#faf9f6] overflow-hidden pt-16 pb-4 sm:py-12 lg:py-0 z-10 snap-start snap-always"
+      className="relative h-screen min-h-screen flex flex-col justify-center bg-[linear-gradient(135deg,#F3ECE2_0%,#E5DDC8_100%)] overflow-hidden pt-16 pb-4 sm:py-12 lg:py-0 z-10 snap-start snap-always"
     >
-      {/* Background glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(26,77,46,0.03)_0%,_transparent_60%)] pointer-events-none" />
+      {/* Background radial lighting */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.45)_0%,_transparent_65%)] pointer-events-none" />
 
       <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-10 lg:px-16 py-1 sm:py-10 lg:py-8 flex items-center justify-center">
         <div className="relative w-full flex flex-col lg:flex-row items-center justify-between gap-3 sm:gap-6 lg:gap-12">

@@ -13,12 +13,12 @@ const WATCH_PARTS = [
     id: "bezel",
     name: "FLUTED BEZEL",
     subtitle: "18K Yellow Gold",
-    sx: 58.5,
-    sy: 31.5,
-    cx: 68,
-    cy: 28,
-    ex: 76,
-    ey: 24,
+    sx: 57.5,
+    sy: 34.0,
+    cx: 66.75,
+    cy: 29.0,
+    ex: 76.0,
+    ey: 24.0,
     hLen: 5,
     align: "right",
   },
@@ -26,12 +26,12 @@ const WATCH_PARTS = [
     id: "cyclops",
     name: "CYCLOPS LENS",
     subtitle: "2.5× Date Magnifier",
-    sx: 56.8,
-    sy: 45.5,
-    cx: 68,
-    cy: 45.5,
-    ex: 76,
-    ey: 45.5,
+    sx: 57.0,
+    sy: 49.5,
+    cx: 66.5,
+    cy: 49.48,
+    ex: 76.0,
+    ey: 49.5,
     hLen: 5,
     align: "right",
   },
@@ -39,12 +39,12 @@ const WATCH_PARTS = [
     id: "bracelet",
     name: "PRESIDENT BRACELET",
     subtitle: "Two-Tone Jubilee Links",
-    sx: 52.5,
-    sy: 76.5,
-    cx: 66,
-    cy: 76.5,
-    ex: 76,
-    ey: 76.5,
+    sx: 50.0,
+    sy: 87.0,
+    cx: 63.0,
+    cy: 82.5,
+    ex: 76.0,
+    ey: 78.0,
     hLen: 5,
     align: "right",
   },
@@ -53,11 +53,11 @@ const WATCH_PARTS = [
     name: "SUNBURST DIAL",
     subtitle: "Olive Sunray Finish",
     sx: 44.0,
-    sy: 37.5,
-    cx: 32,
-    cy: 28,
-    ex: 24,
-    ey: 24,
+    sy: 42.0,
+    cx: 34.0,
+    cy: 33.0,
+    ex: 24.0,
+    ey: 24.0,
     hLen: 5,
     align: "left",
   },
@@ -66,11 +66,11 @@ const WATCH_PARTS = [
     name: "CALIBRE 3235",
     subtitle: "Perpetual Movement & Hands",
     sx: 49.8,
-    sy: 46.0,
-    cx: 32,
-    cy: 46.0,
-    ex: 24,
-    ey: 46.0,
+    sy: 49.5,
+    cx: 36.9,
+    cy: 49.48,
+    ex: 24.0,
+    ey: 49.5,
     hLen: 5,
     align: "left",
   },
@@ -78,12 +78,12 @@ const WATCH_PARTS = [
     id: "case",
     name: "OYSTER CASE",
     subtitle: "904L Steel & 100m Case",
-    sx: 40.5,
-    sy: 62.5,
-    cx: 32,
-    cy: 72.0,
-    ex: 24,
-    ey: 76.5,
+    sx: 39.0,
+    sy: 58.0,
+    cx: 31.5,
+    cy: 68.0,
+    ex: 24.0,
+    ey: 78.0,
     hLen: 5,
     align: "left",
   },
@@ -122,8 +122,12 @@ export default function WatchDetail() {
     if (!vPaths.length) return;
 
     vPaths.forEach((p) => {
-      const len = p.getTotalLength();
-      gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
+      try {
+        const len = p.getTotalLength() || 100;
+        gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
+      } catch (_) {
+        gsap.set(p, { strokeDashoffset: 0 });
+      }
     });
 
     gsap.set(vWDots, { scale: 0, opacity: 0 });
@@ -156,9 +160,6 @@ export default function WatchDetail() {
         duration: 0.85,
         stagger: 0.07,
         ease: "power2.inOut",
-        onComplete: () => {
-          vPaths.forEach((p) => gsap.set(p, { strokeDasharray: "5 4" }));
-        },
       },
       0.15
     );
@@ -394,7 +395,7 @@ export default function WatchDetail() {
             alt="Dark Leather Display Pillow"
             width={600}
             height={600}
-            quality={100}
+            quality={95}
             priority
             className="w-full h-auto object-contain filter drop-shadow-[0_30px_60px_rgba(0,0,0,0.5)] contrast-[1.04] brightness-[1.01]"
           />
@@ -416,14 +417,14 @@ export default function WatchDetail() {
         <svg
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
-          className="absolute inset-0 w-full h-full pointer-events-none filter drop-shadow-[0_0_6px_rgba(52,211,153,0.9)]"
+          className="absolute inset-0 w-full h-full pointer-events-none filter drop-shadow-[0_0_8px_rgba(255,255,255,0.95)]"
           fill="none"
         >
           <defs>
             <linearGradient id="lineGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-              <stop offset="50%" stopColor="#34d399" stopOpacity="0.9" />
-              <stop offset="100%" stopColor="#ffffff" stopOpacity="0.95" />
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+              <stop offset="50%" stopColor="#ffffff" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="#ffffff" stopOpacity="1" />
             </linearGradient>
           </defs>
           {WATCH_PARTS.map((p, i) => (
@@ -432,7 +433,7 @@ export default function WatchDetail() {
               ref={(el) => (pathsRef.current[i] = el)}
               d={`M${p.sx},${p.sy} Q${p.cx},${p.cy} ${p.ex},${p.ey}`}
               stroke="url(#lineGlow)"
-              strokeWidth="1.6"
+              strokeWidth="1.8"
               strokeLinecap="round"
               vectorEffect="non-scaling-stroke"
             />
@@ -451,8 +452,8 @@ export default function WatchDetail() {
               transform: "translate(-50%, -50%)",
             }}
           >
-            <span className="absolute w-3.5 h-3.5 rounded-full bg-emerald-400/40 animate-ping" />
-            <span className="relative w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-white border-2 border-emerald-400 shadow-[0_0_10px_rgba(52,211,153,1)]" />
+            <span className="absolute w-3.5 h-3.5 rounded-full bg-white/50 animate-ping" />
+            <span className="relative w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-white border-2 border-white shadow-[0_0_12px_rgba(255,255,255,1)]" />
           </div>
         ))}
 
@@ -461,7 +462,7 @@ export default function WatchDetail() {
           <div
             key={`ed-${p.id}`}
             ref={(el) => (endDotsRef.current[i] = el)}
-            className="absolute w-2 h-2 rounded-full bg-white border border-emerald-400 shadow-[0_0_6px_rgba(255,255,255,0.9)]"
+            className="absolute w-2 h-2 rounded-full bg-white border border-white shadow-[0_0_8px_rgba(255,255,255,0.95)]"
             style={{
               left: `${p.ex}%`,
               top: `${p.ey}%`,
@@ -478,7 +479,7 @@ export default function WatchDetail() {
             <div
               key={`hl-${p.id}`}
               ref={(el) => (hLinesRef.current[i] = el)}
-              className="absolute h-[1.5px] bg-gradient-to-r from-emerald-400 via-white to-emerald-400 shadow-[0_0_6px_rgba(255,255,255,0.8)]"
+              className="absolute h-[1.8px] bg-white shadow-[0_0_8px_rgba(255,255,255,0.95)]"
               style={{
                 left: `${lineLeft}%`,
                 top: `${p.ey}%`,
@@ -507,13 +508,12 @@ export default function WatchDetail() {
             >
               <div
                 ref={(el) => (labelsRef.current[i] = el)}
-                className={`px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.35)] flex flex-col gap-0.5 sm:gap-1 transition-all duration-300 hover:border-emerald-400/50 ${
-                  isRight ? "items-start text-left" : "items-end text-right"
-                }`}
+                className={`px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full border-[2px] border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.2)] flex items-center transition-all duration-300 hover:border-white ${isRight ? "text-left" : "text-right"
+                  }`}
                 style={{
-                  background: "rgba(10, 15, 26, 0.65)",
-                  backdropFilter: "blur(14px) saturate(1.3)",
-                  WebkitBackdropFilter: "blur(14px) saturate(1.3)",
+                  background: "rgba(255, 255, 255, 0.15)",
+                  backdropFilter: "blur(12px) saturate(1.4)",
+                  WebkitBackdropFilter: "blur(12px) saturate(1.4)",
                 }}
               >
                 <p
@@ -521,12 +521,6 @@ export default function WatchDetail() {
                   style={{ fontFamily: "var(--font-geist)" }}
                 >
                   {p.name}
-                </p>
-                <p
-                  className="text-[7.5px] sm:text-[9px] md:text-[10px] tracking-[0.04em] font-medium text-emerald-300/90 leading-tight whitespace-nowrap"
-                  style={{ fontFamily: "var(--font-geist)" }}
-                >
-                  {p.subtitle}
                 </p>
               </div>
             </div>
