@@ -3,170 +3,361 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import gsap from "gsap";
 
-/* ═══════════════════════════════════════════════════
-   WATCH PARTS INDICATOR DATA — 6 Horology Marking Points
-   ═══════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   WATCH PARTS — Callout Annotation Data
+   ═══════════════════════════════════════════════════════════════════ */
 const WATCH_PARTS = [
   {
     id: "bezel",
     name: "FLUTED BEZEL",
     subtitle: "18K Yellow Gold",
-    labelPos: { top: "20%", right: "4%" },
-    line: { x1: 56, y1: 32, x2: 78, y2: 22 },
+    sx: 58.5,
+    sy: 31.5,
+    cx: 68,
+    cy: 28,
+    ex: 76,
+    ey: 24,
+    hLen: 5,
+    align: "right",
   },
   {
     id: "cyclops",
     name: "CYCLOPS LENS",
-    subtitle: "2.5x Magnifier",
-    labelPos: { top: "46%", right: "2%" },
-    line: { x1: 60, y1: 47, x2: 82, y2: 47 },
+    subtitle: "2.5× Date Magnifier",
+    sx: 56.8,
+    sy: 45.5,
+    cx: 68,
+    cy: 45.5,
+    ex: 76,
+    ey: 45.5,
+    hLen: 5,
+    align: "right",
+  },
+  {
+    id: "bracelet",
+    name: "PRESIDENT BRACELET",
+    subtitle: "Two-Tone Jubilee Links",
+    sx: 52.5,
+    sy: 76.5,
+    cx: 66,
+    cy: 76.5,
+    ex: 76,
+    ey: 76.5,
+    hLen: 5,
+    align: "right",
   },
   {
     id: "dial",
     name: "SUNBURST DIAL",
     subtitle: "Olive Sunray Finish",
-    labelPos: { top: "20%", left: "4%" },
-    line: { x1: 48, y1: 46, x2: 22, y2: 22 },
+    sx: 44.0,
+    sy: 37.5,
+    cx: 32,
+    cy: 28,
+    ex: 24,
+    ey: 24,
+    hLen: 5,
+    align: "left",
   },
   {
     id: "movement",
     name: "CALIBRE 3235",
-    subtitle: "70H Power Reserve",
-    labelPos: { top: "46%", left: "2%" },
-    line: { x1: 40, y1: 47, x2: 18, y2: 47 },
+    subtitle: "Perpetual Movement & Hands",
+    sx: 49.8,
+    sy: 46.0,
+    cx: 32,
+    cy: 46.0,
+    ex: 24,
+    ey: 46.0,
+    hLen: 5,
+    align: "left",
   },
   {
     id: "case",
     name: "OYSTER CASE",
-    subtitle: "100m Waterproof",
-    labelPos: { bottom: "20%", left: "4%" },
-    line: { x1: 42, y1: 62, x2: 22, y2: 76 },
-  },
-  {
-    id: "bracelet",
-    name: "PRESIDENT BRACELET",
-    subtitle: "Concealed Crownclasp",
-    labelPos: { bottom: "20%", right: "4%" },
-    line: { x1: 52, y1: 72, x2: 78, y2: 76 },
+    subtitle: "904L Steel & 100m Case",
+    sx: 40.5,
+    sy: 62.5,
+    cx: 32,
+    cy: 72.0,
+    ex: 24,
+    ey: 76.5,
+    hLen: 5,
+    align: "left",
   },
 ];
 
-/* ═══════════════════════════════════════════════════
-   MAIN WATCH DETAIL COMPONENT
-   Renders the dark leather pillow and synchronized part marking dash lines!
-   ═══════════════════════════════════════════════════ */
 export default function WatchDetail() {
   const sectionRef = useRef(null);
   const [delta, setDelta] = useState({ x: 0, y: 0 });
 
-  /* ═══ Calculate distance offset: Showcase Pillow -> WatchDetail Center ═══ */
+  // Callout element refs
+  const pathsRef = useRef([]);
+  const watchDotsRef = useRef([]);
+  const endDotsRef = useRef([]);
+  const hLinesRef = useRef([]);
+  const labelsRef = useRef([]);
+
+  // Animation state
+  const tlRef = useRef(null);
+  const animTimerRef = useRef(null);
+  const hasPlayedRef = useRef(false);
+  const zoomLockRef = useRef(false);
+
+  /* ═══ IMPERATIVE: Play callout animation ═══ */
+  const playCalloutAnimation = useCallback(() => {
+    if (tlRef.current) {
+      tlRef.current.kill();
+      tlRef.current = null;
+    }
+
+    const vPaths = pathsRef.current.filter(Boolean);
+    const vWDots = watchDotsRef.current.filter(Boolean);
+    const vEDots = endDotsRef.current.filter(Boolean);
+    const vHLines = hLinesRef.current.filter(Boolean);
+    const vLabels = labelsRef.current.filter(Boolean);
+
+    if (!vPaths.length) return;
+
+    vPaths.forEach((p) => {
+      const len = p.getTotalLength();
+      gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
+    });
+
+    gsap.set(vWDots, { scale: 0, opacity: 0 });
+    gsap.set(vEDots, { scale: 0, opacity: 0 });
+    gsap.set(vHLines, { scaleX: 0 });
+    gsap.set(vLabels, { opacity: 0, y: 14 });
+
+    vWDots.forEach((d) => gsap.set(d, { transformOrigin: "center center" }));
+    vEDots.forEach((d) => gsap.set(d, { transformOrigin: "center center" }));
+    vHLines.forEach((line, i) => {
+      const isRight = WATCH_PARTS[i]?.align === "right";
+      gsap.set(line, { transformOrigin: isRight ? "0% 50%" : "100% 50%" });
+    });
+
+    const tl = gsap.timeline();
+    tlRef.current = tl;
+
+    tl.to(vWDots, {
+      scale: 1,
+      opacity: 1,
+      duration: 0.35,
+      stagger: 0.06,
+      ease: "back.out(2.5)",
+    });
+
+    tl.to(
+      vPaths,
+      {
+        strokeDashoffset: 0,
+        duration: 0.85,
+        stagger: 0.07,
+        ease: "power2.inOut",
+        onComplete: () => {
+          vPaths.forEach((p) => gsap.set(p, { strokeDasharray: "5 4" }));
+        },
+      },
+      0.15
+    );
+
+    tl.to(
+      vEDots,
+      {
+        scale: 1,
+        opacity: 1,
+        duration: 0.25,
+        stagger: 0.05,
+        ease: "back.out(2)",
+      },
+      0.65
+    );
+
+    tl.to(
+      vHLines,
+      {
+        scaleX: 1,
+        duration: 0.35,
+        stagger: 0.04,
+        ease: "power2.out",
+      },
+      0.7
+    );
+
+    tl.to(
+      vLabels,
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        stagger: 0.07,
+        ease: "power2.out",
+      },
+      0.8
+    );
+  }, []);
+
+  /* ═══ IMPERATIVE: Reset callout animation ═══ */
+  const resetCalloutAnimation = useCallback(() => {
+    if (animTimerRef.current) {
+      clearTimeout(animTimerRef.current);
+      animTimerRef.current = null;
+    }
+    if (tlRef.current) {
+      tlRef.current.kill();
+      tlRef.current = null;
+    }
+
+    const vPaths = pathsRef.current.filter(Boolean);
+    const vWDots = watchDotsRef.current.filter(Boolean);
+    const vEDots = endDotsRef.current.filter(Boolean);
+    const vHLines = hLinesRef.current.filter(Boolean);
+    const vLabels = labelsRef.current.filter(Boolean);
+
+    vPaths.forEach((p) => {
+      try {
+        const len = p.getTotalLength();
+        gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
+      } catch (_) { }
+    });
+    gsap.set(vWDots, { scale: 0, opacity: 0 });
+    gsap.set(vEDots, { scale: 0, opacity: 0 });
+    gsap.set(vHLines, { scaleX: 0 });
+    gsap.set(vLabels, { opacity: 0, y: 14 });
+  }, []);
+
+  /* ═══ Calculate delta ═══ */
   const calculateDelta = useCallback(() => {
     const pillowContainer = document.getElementById("showcase-pillow-container");
     const detailElement = sectionRef.current;
-
     if (pillowContainer && detailElement) {
       const pillowRect = pillowContainer.getBoundingClientRect();
       const detailRect = detailElement.getBoundingClientRect();
-
       const scrollY = window.scrollY || window.pageYOffset;
       const scrollX = window.scrollX || window.pageXOffset;
-
-      const pillowCenter = {
-        x: pillowRect.left + scrollX + pillowRect.width / 2,
-        y: pillowRect.top + scrollY + pillowRect.height / 2,
-      };
-
-      const detailCenter = {
-        x: detailRect.left + scrollX + detailRect.width / 2,
-        y: detailRect.top + scrollY + detailRect.height / 2,
-      };
-
       setDelta({
-        x: pillowCenter.x - detailCenter.x,
-        y: pillowCenter.y - detailCenter.y,
+        x:
+          pillowRect.left +
+          scrollX +
+          pillowRect.width / 2 -
+          (detailRect.left + scrollX + detailRect.width / 2),
+        y:
+          pillowRect.top +
+          scrollY +
+          pillowRect.height / 2 -
+          (detailRect.top + scrollY + detailRect.height / 2),
       });
     }
   }, []);
 
   useEffect(() => {
     calculateDelta();
-    const timer = setTimeout(calculateDelta, 800);
+    const t = setTimeout(calculateDelta, 800);
     window.addEventListener("resize", calculateDelta);
-
     return () => {
-      clearTimeout(timer);
+      clearTimeout(t);
       window.removeEventListener("resize", calculateDelta);
     };
   }, [calculateDelta]);
 
-  /* ═══ 0.8s Time-Based Zoom & Part Marking Trigger ═══ */
+  /* ═══ IntersectionObserver ═══ */
   const [isZoomed, setIsZoomed] = useState(false);
 
   useEffect(() => {
-    const detailEl = document.getElementById("detail");
-    if (!detailEl) return;
+    const el = document.getElementById("detail");
+    if (!el) return;
+    let zoomInTimer;
+    let zoomOutTimer;
 
-    let timer;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          // Wait 0.8s after landing in Details section, then smoothly zoom in pillow, watch & reveal part marking indicators!
-          timer = setTimeout(() => {
-            setIsZoomed(true);
-            if (typeof window !== "undefined") {
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          if (zoomOutTimer) {
+            clearTimeout(zoomOutTimer);
+            zoomOutTimer = null;
+          }
+          if (!zoomLockRef.current) {
+            zoomInTimer = setTimeout(() => {
+              zoomLockRef.current = true;
+              setIsZoomed(true);
               window.dispatchEvent(
                 new CustomEvent("detail-zoom-trigger", { detail: { zoomed: true } })
               );
-            }
-          }, 800);
+
+              if (!hasPlayedRef.current) {
+                hasPlayedRef.current = true;
+                animTimerRef.current = setTimeout(() => {
+                  animTimerRef.current = null;
+                  playCalloutAnimation();
+                }, 50);
+              }
+            }, 800);
+          }
         } else {
-          setIsZoomed(false);
-          if (typeof window !== "undefined") {
+          if (zoomInTimer) {
+            clearTimeout(zoomInTimer);
+            zoomInTimer = null;
+          }
+          zoomOutTimer = setTimeout(() => {
+            zoomLockRef.current = false;
+            hasPlayedRef.current = false;
+
+            setIsZoomed(false);
             window.dispatchEvent(
               new CustomEvent("detail-zoom-trigger", { detail: { zoomed: false } })
             );
-          }
-          if (timer) clearTimeout(timer);
+
+            resetCalloutAnimation();
+          }, 500);
         }
       },
       { threshold: 0.35 }
     );
+    obs.observe(el);
 
-    observer.observe(detailEl);
     return () => {
-      observer.disconnect();
-      if (timer) clearTimeout(timer);
+      obs.disconnect();
+      if (zoomInTimer) clearTimeout(zoomInTimer);
+      if (zoomOutTimer) clearTimeout(zoomOutTimer);
+      if (animTimerRef.current) clearTimeout(animTimerRef.current);
+      if (tlRef.current) {
+        tlRef.current.kill();
+        tlRef.current = null;
+      }
     };
-  }, []);
+  }, [playCalloutAnimation, resetCalloutAnimation]);
 
-  /* ═══ Scroll Progress tracking ═══ */
+  /* ═══ Scroll Progress ═══ */
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
   });
-
-  const smoothProgress = useSpring(scrollYProgress, {
+  const smooth = useSpring(scrollYProgress, {
     stiffness: 180,
     damping: 30,
     mass: 0.4,
   });
-
-  /* ═══ 1. Smooth Flight (Showcase Pillow Position -> Detail Center Position) ═══ */
-  const pillowY = useTransform(smoothProgress, [0, 0.45, 0.8], [delta.y, 0, 0]);
-  const pillowX = useTransform(smoothProgress, [0, 0.45, 0.8], [delta.x, 0, 0]);
-  const pillowOpacity = useTransform(smoothProgress, [0.02, 0.1, 0.85, 0.95], [0, 1, 1, 0]);
+  const pillowY = useTransform(smooth, [0, 0.45, 0.8], [delta.y, 0, 0]);
+  const pillowX = useTransform(smooth, [0, 0.45, 0.8], [delta.x, 0, 0]);
+  const pillowOpacity = useTransform(smooth, [0.02, 0.1, 0.85, 0.95], [
+    0,
+    1,
+    1,
+    0,
+  ]);
 
   return (
     <section
       ref={sectionRef}
       id="detail"
-      className="relative h-screen min-h-screen flex items-center justify-center bg-[#faf9f6] overflow-hidden snap-start snap-always select-none z-15"
+      className="relative h-screen min-h-screen flex items-center justify-center bg-[#faf9f6] overflow-hidden snap-start snap-always select-none"
     >
-      {/* ═══ Subtle Luxury Ambient Radial Glow ═══ */}
+      {/* ═══ Ambient Glow ═══ */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(26,77,46,0.04)_0%,_rgba(250,249,246,0.8)_60%,_#faf9f6_100%)] pointer-events-none z-0" />
 
-      {/* ═══ Subtle Grain Background Texture Overlay ═══ */}
+      {/* ═══ Grain Texture ═══ */}
       <div
         className="absolute inset-0 z-[1] opacity-[0.015] pointer-events-none"
         style={{
@@ -177,19 +368,25 @@ export default function WatchDetail() {
       />
 
       {/* ═══════════════════════════════════════════
-          PILLOW CONTAINER: Lands in center, then smoothly zooms 1x -> 3.6x 0.8s after arrival
+          PILLOW CONTAINER (Watch Image) - Layer 1 (Backside)
           ═══════════════════════════════════════════ */}
       <motion.div
         animate={{
           scale: isZoomed ? 3.6 : 1,
         }}
-        transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+        transition={{
+          duration: isZoomed ? 2 : 1,
+          ease: isZoomed
+            ? [0.16, 1, 0.3, 1]
+            : [0.45, 0, 0.85, 0.35],
+        }}
         style={{
           y: pillowY,
           x: pillowX,
           opacity: pillowOpacity,
+          zIndex: 5,
         }}
-        className="absolute inset-0 flex items-center justify-center z-[2] pointer-events-none will-change-transform"
+        className="absolute inset-0 flex items-center justify-center pointer-events-none will-change-transform"
       >
         <div className="relative w-[340px] sm:w-[480px] aspect-square flex items-center justify-center translate-y-[45px]">
           <Image
@@ -204,7 +401,138 @@ export default function WatchDetail() {
         </div>
       </motion.div>
 
+      {/* ═══════════════════════════════════════════════════════
+          CALLOUT ANNOTATION OVERLAY - Layer 50 (FRONT FACE)
+          Renders directly ON TOP OF the floating watch image (z-20)
+          ═══════════════════════════════════════════════════════ */}
+      <div
+        className="absolute inset-0 pointer-events-none z-[50]"
+        style={{
+          opacity: isZoomed ? 1 : 0,
+          transition: "opacity 0.5s ease 0.1s",
+        }}
+      >
+        {/* ── SVG Pointer Lines ── */}
+        <svg
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          className="absolute inset-0 w-full h-full pointer-events-none filter drop-shadow-[0_0_6px_rgba(52,211,153,0.9)]"
+          fill="none"
+        >
+          <defs>
+            <linearGradient id="lineGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+              <stop offset="50%" stopColor="#34d399" stopOpacity="0.9" />
+              <stop offset="100%" stopColor="#ffffff" stopOpacity="0.95" />
+            </linearGradient>
+          </defs>
+          {WATCH_PARTS.map((p, i) => (
+            <path
+              key={p.id}
+              ref={(el) => (pathsRef.current[i] = el)}
+              d={`M${p.sx},${p.sy} Q${p.cx},${p.cy} ${p.ex},${p.ey}`}
+              stroke="url(#lineGlow)"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
+            />
+          ))}
+        </svg>
 
+        {/* ── Watch-Part Dots (on the watch) ── */}
+        {WATCH_PARTS.map((p, i) => (
+          <div
+            key={`wd-${p.id}`}
+            ref={(el) => (watchDotsRef.current[i] = el)}
+            className="absolute flex items-center justify-center pointer-events-none"
+            style={{
+              left: `${p.sx}%`,
+              top: `${p.sy}%`,
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <span className="absolute w-3.5 h-3.5 rounded-full bg-emerald-400/40 animate-ping" />
+            <span className="relative w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-white border-2 border-emerald-400 shadow-[0_0_10px_rgba(52,211,153,1)]" />
+          </div>
+        ))}
+
+        {/* ── Endpoint Dots (near labels) ── */}
+        {WATCH_PARTS.map((p, i) => (
+          <div
+            key={`ed-${p.id}`}
+            ref={(el) => (endDotsRef.current[i] = el)}
+            className="absolute w-2 h-2 rounded-full bg-white border border-emerald-400 shadow-[0_0_6px_rgba(255,255,255,0.9)]"
+            style={{
+              left: `${p.ex}%`,
+              top: `${p.ey}%`,
+              transform: "translate(-50%, -50%)",
+            }}
+          />
+        ))}
+
+        {/* ── Horizontal Connector Lines ── */}
+        {WATCH_PARTS.map((p, i) => {
+          const isRight = p.align === "right";
+          const lineLeft = isRight ? p.ex : p.ex - p.hLen;
+          return (
+            <div
+              key={`hl-${p.id}`}
+              ref={(el) => (hLinesRef.current[i] = el)}
+              className="absolute h-[1.5px] bg-gradient-to-r from-emerald-400 via-white to-emerald-400 shadow-[0_0_6px_rgba(255,255,255,0.8)]"
+              style={{
+                left: `${lineLeft}%`,
+                top: `${p.ey}%`,
+                width: `${p.hLen}%`,
+                transformOrigin: `${isRight ? "0%" : "100%"} 50%`,
+                transform: "scaleX(0)",
+              }}
+            />
+          );
+        })}
+
+        {/* ── Text Labels (glass morphism) ── */}
+        {WATCH_PARTS.map((p, i) => {
+          const isRight = p.align === "right";
+          const labelX = isRight ? p.ex + p.hLen : p.ex - p.hLen;
+          return (
+            <div
+              key={`lb-${p.id}`}
+              className="absolute pointer-events-auto"
+              style={{
+                left: isRight ? `${labelX}%` : "auto",
+                right: isRight ? "auto" : `${100 - labelX}%`,
+                top: `${p.ey}%`,
+                transform: "translateY(-50%)",
+              }}
+            >
+              <div
+                ref={(el) => (labelsRef.current[i] = el)}
+                className={`px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.35)] flex flex-col gap-0.5 sm:gap-1 transition-all duration-300 hover:border-emerald-400/50 ${
+                  isRight ? "items-start text-left" : "items-end text-right"
+                }`}
+                style={{
+                  background: "rgba(10, 15, 26, 0.65)",
+                  backdropFilter: "blur(14px) saturate(1.3)",
+                  WebkitBackdropFilter: "blur(14px) saturate(1.3)",
+                }}
+              >
+                <p
+                  className="text-[9px] sm:text-[11px] md:text-[12px] tracking-[0.14em] uppercase font-bold text-white leading-tight whitespace-nowrap"
+                  style={{ fontFamily: "var(--font-geist)" }}
+                >
+                  {p.name}
+                </p>
+                <p
+                  className="text-[7.5px] sm:text-[9px] md:text-[10px] tracking-[0.04em] font-medium text-emerald-300/90 leading-tight whitespace-nowrap"
+                  style={{ fontFamily: "var(--font-geist)" }}
+                >
+                  {p.subtitle}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </section>
   );
 }

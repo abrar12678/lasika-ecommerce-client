@@ -429,7 +429,7 @@ export default function HeroSection() {
     <section
       ref={containerRef}
       id="hero"
-      className="relative h-screen min-h-screen overflow-visible flex items-center justify-center pt-12 sm:pt-20 z-20 snap-start snap-always"
+      className="relative h-screen min-h-screen overflow-visible flex items-center justify-center pt-12 sm:pt-20 snap-start snap-always"
     >
       {/* BACKGROUND — white → phase 2 gradient */}
       <motion.div
@@ -503,7 +503,7 @@ export default function HeroSection() {
             rotate: watchRotate,
             opacity: watchOpacity,
           }}
-          className="absolute inset-0 z-[50] pointer-events-none"
+          className="absolute inset-0 z-[20] pointer-events-none"
         >
           <div className="absolute inset-0 flex items-center justify-center">
             <motion.div
