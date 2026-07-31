@@ -15,51 +15,46 @@ function DetailCard({ src, label, subtitle, position, phase2 }) {
     <motion.div
       initial={{
         opacity: 0,
-        x: isTopLeft ? -60 : 60,
-        y: isTopLeft ? -30 : 30,
-        scale: 0.85,
-        rotate: isTopLeft ? -8 : 8,
+        x: isTopLeft ? -70 : 70,
+        y: isTopLeft ? -35 : 35,
+        scale: 0.82,
+        rotate: isTopLeft ? -10 : 10,
       }}
       animate={
         phase2
-          ? { opacity: 1, x: 0, y: 0, scale: 1, rotate: isTopLeft ? -3 : 3 }
+          ? { opacity: 1, x: 0, y: 0, scale: 1, rotate: isTopLeft ? -2 : 2 }
           : {
-            opacity: 0,
-            x: isTopLeft ? -60 : 60,
-            y: isTopLeft ? -30 : 30,
-            scale: 0.85,
-            rotate: isTopLeft ? -8 : 8,
-          }
+              opacity: 0,
+              x: isTopLeft ? -70 : 70,
+              y: isTopLeft ? -35 : 35,
+              scale: 0.82,
+              rotate: isTopLeft ? -10 : 10,
+            }
       }
       transition={{
-        duration: 0.9,
-        delay: isTopLeft ? 0.15 : 0.3,
+        duration: 1,
+        delay: isTopLeft ? 0.18 : 0.35,
         ease: [0.22, 1, 0.36, 1],
       }}
       className={`absolute z-20 ${isTopLeft
-        ? "top-[16%] left-[4%] sm:top-[16%] sm:left-[5%] md:top-[12%] md:left-[6%] lg:top-[16%] lg:left-[6%]"
-        : "bottom-[12%] right-[4%] sm:bottom-[10%] sm:right-[5%] md:bottom-[12%] md:right-[6%] lg:bottom-[10%] lg:right-[6%]"
+        ? "top-[14%] left-[3%] sm:top-[14%] sm:left-[4%] md:top-[10%] md:left-[5%] lg:top-[14%] lg:left-[5%]"
+        : "bottom-[10%] right-[3%] sm:bottom-[8%] sm:right-[4%] md:bottom-[10%] md:right-[5%] lg:bottom-[8%] lg:right-[5%]"
         }`}
     >
-      {/* Card — WHITE TRANSPARENT WITH LUXURY FLOATING SHADOW */}
       <div
-        className="relative w-[108px] sm:w-[175px] md:w-[180px] lg:w-[230px]"
+        className="relative w-[112px] sm:w-[180px] md:w-[190px] lg:w-[240px] hover-lift cursor-default"
         style={{
-          background: "rgba(255, 255, 255, 0.70)",
-          border: "1px solid rgba(255, 255, 255, 0.85)",
-          boxShadow: "0 18px 40px -8px rgba(0, 0, 0, 0.16), 0 6px 16px rgba(0, 0, 0, 0.08)",
+          background: "rgba(255, 255, 255, 0.72)",
+          border: "1px solid rgba(255, 255, 255, 0.9)",
+          boxShadow: "0 20px 50px -10px rgba(0, 0, 0, 0.12), 0 8px 20px rgba(0, 0, 0, 0.06)",
         }}
       >
-        {/* ── Div 1: Image area — GLASS TRANSPARENT (Identical fixed height on mobile) ── */}
         <div
-          className="relative overflow-hidden h-[82px] sm:h-auto flex items-center justify-center p-1 sm:p-5 md:p-3.5 sm:pt-4 md:pt-2.5 sm:pb-0"
+          className="relative overflow-hidden h-[86px] sm:h-auto flex items-center justify-center p-1 sm:p-5 md:p-4 sm:pt-5 md:pt-3 sm:pb-0"
           style={{
             background: "transparent",
-            backdropFilter: "blur(4px) saturate(1.1)",
-            WebkitBackdropFilter: "blur(4px) saturate(1.1)",
-            borderTop: "1px solid rgba(255, 255, 255, 0.45)",
-            borderLeft: "1px solid rgba(255, 255, 255, 0.45)",
-            borderRight: "1px solid rgba(255, 255, 255, 0.45)",
+            backdropFilter: "blur(6px) saturate(1.2)",
+            WebkitBackdropFilter: "blur(6px) saturate(1.2)",
           }}
         >
           <Image
@@ -67,26 +62,25 @@ function DetailCard({ src, label, subtitle, position, phase2 }) {
             alt={label || "Watch detail card"}
             width={180}
             height={180}
-            className="max-h-[74px] sm:max-h-none w-auto sm:w-full h-auto object-contain block mx-auto drop-shadow-[0_10px_20px_rgba(0,0,0,0.18)]"
-            sizes="(max-width: 640px) 90px, (max-width: 768px) 155px, (max-width: 1024px) 180px, 195px"
+            className="max-h-[78px] sm:max-h-none w-auto sm:w-full h-auto object-contain block mx-auto drop-shadow-[0_12px_24px_rgba(0,0,0,0.15)]"
+            sizes="(max-width: 640px) 95px, (max-width: 768px) 160px, (max-width: 1024px) 185px, 200px"
           />
         </div>
 
-        {/* ── Div 2: Text area — WHITE TRANSPARENT (Identical fixed height on mobile) ── */}
         <div
-          className="h-[52px] sm:h-auto flex flex-col justify-center p-1 sm:p-5 md:p-3.5 sm:pt-4 md:pt-3 sm:pb-5 md:pb-3.5 text-left"
+          className="h-[56px] sm:h-auto flex flex-col justify-center p-1.5 sm:p-5 md:p-4 sm:pt-5 md:pt-4 sm:pb-5 md:pb-4 text-left"
           style={{
-            background: "rgba(255, 255, 255, 0.60)",
+            background: "rgba(255, 255, 255, 0.55)",
           }}
         >
           <p
-            className="text-[#1a4d2e] text-[8.5px] sm:text-[11px] md:text-[12px] font-bold tracking-[0.08em] sm:tracking-[0.14em] uppercase leading-tight truncate"
+            className="text-[#1a4d2e] text-[8px] sm:text-[11px] md:text-[12px] font-bold tracking-[0.1em] sm:tracking-[0.16em] uppercase leading-tight truncate"
             style={{ fontFamily: "var(--font-geist)" }}
           >
             {label}
           </p>
           <p
-            className="text-[#1a4d2e]/75 text-[6.5px] sm:text-[9px] md:text-[10px] font-normal tracking-[0.01em] mt-0.5 sm:mt-1.5 leading-tight line-clamp-2"
+            className="text-[#1a4d2e]/65 text-[6px] sm:text-[9px] md:text-[10px] font-normal tracking-[0.01em] mt-1 sm:mt-1.5 leading-tight line-clamp-2"
             style={{ fontFamily: "var(--font-geist)" }}
           >
             {subtitle}
@@ -102,32 +96,32 @@ function DetailCard({ src, label, subtitle, position, phase2 }) {
    ───────────────────────────────────────────── */
 function ScatteredWord({ word, phase2, index }) {
   const positions = [
-    { className: "top-[70%] left-[8%] sm:top-[76%] sm:left-[6%] md:top-[74%] md:left-[6%] lg:top-[84%] lg:left-[10%]", rotate: 5 }, // Timeless.
-    { className: "top-[20%] right-[16%] sm:top-[14%] sm:right-[18%] md:top-[14%] md:right-[12%]", rotate: -5 }, // Elegant.
-    { className: "top-[20%] left-[32%] sm:top-[10%] sm:left-[28%] md:top-[10%] md:left-[22%]", rotate: 4 }, // Precious.
-    { className: "top-[46%] right-[8%] sm:top-[44%] sm:right-[5%] md:top-[44%] md:right-[6%]", rotate: 2 }, // Refined.
-    { className: "top-[93%] right-[4%] sm:top-[88%] md:top-[88%] md:right-[10%] lg:top-[90%] lg:right-[22%] left-auto", rotate: -5 }, // Prestigious.
+    { className: "top-[68%] left-[7%] sm:top-[74%] sm:left-[5%] md:top-[72%] md:left-[5%] lg:top-[82%] lg:left-[9%]", rotate: 4 },
+    { className: "top-[18%] right-[14%] sm:top-[12%] sm:right-[16%] md:top-[12%] md:right-[10%]", rotate: -4 },
+    { className: "top-[18%] left-[30%] sm:top-[8%] sm:left-[26%] md:top-[8%] md:left-[20%]", rotate: 3 },
+    { className: "top-[44%] right-[7%] sm:top-[42%] sm:right-[4%] md:top-[42%] md:right-[5%]", rotate: 1.5 },
+    { className: "top-[91%] right-[3%] sm:top-[86%] md:top-[86%] md:right-[9%] lg:top-[88%] lg:right-[28%] left-auto", rotate: -4 },
   ];
 
   const pos = positions[index] || positions[0];
 
   return (
     <motion.span
-      initial={{ opacity: 0, scale: 0.8, rotate: pos.rotate }}
+      initial={{ opacity: 0, scale: 0.7, rotate: pos.rotate }}
       animate={
         phase2
-          ? { opacity: 1, scale: 1, rotate: pos.rotate }
-          : { opacity: 0, scale: 0.8, rotate: pos.rotate }
+          ? { opacity: 0.6, scale: 1, rotate: pos.rotate }
+          : { opacity: 0, scale: 0.7, rotate: pos.rotate }
       }
       transition={{
-        duration: 0.6,
-        delay: 0.4 + index * 0.12,
+        duration: 0.7,
+        delay: 0.5 + index * 0.14,
         ease: [0.22, 1, 0.36, 1],
       }}
       className={`absolute z-20 block pointer-events-none select-none ${pos.className}`}
     >
       <span
-        className="text-[11px] sm:text-[15px] md:text-base tracking-[0.08em] text-[#1a4d2e] font-normal whitespace-nowrap"
+        className="text-[11px] sm:text-[16px] md:text-[17px] tracking-[0.1em] text-[#1a4d2e] font-normal whitespace-nowrap italic"
         style={{ fontFamily: "var(--font-playfair)" }}
       >
         {word}
@@ -144,18 +138,21 @@ function ScrollIndicator({ delay, onClick }) {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ delay: delay || 4, duration: 1 }}
+      transition={{ delay: delay || 4.2, duration: 1.2 }}
       onClick={onClick}
-      className="hidden sm:flex flex-col items-center gap-2 mt-6 cursor-pointer pointer-events-auto group"
+      className="hidden sm:flex flex-col items-center gap-2.5 mt-6 cursor-pointer pointer-events-auto group"
     >
-      <span className="text-[9px] tracking-[0.3em] uppercase text-[#1a4d2e]/40 group-hover:text-[#1a4d2e] transition-colors">
+      <span
+        className="text-[9px] tracking-[0.35em] uppercase text-[#1a4d2e]/30 group-hover:text-[#c5a56e] transition-colors duration-500"
+        style={{ fontFamily: "var(--font-geist)" }}
+      >
         Scroll
       </span>
       <motion.div
-        animate={{ y: [0, 6, 0] }}
-        transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+        animate={{ y: [0, 7, 0] }}
+        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
       >
-        <ChevronDown className="h-4 w-4 text-[#1a4d2e]/40 group-hover:text-[#1a4d2e] transition-colors" />
+        <ChevronDown className="h-4 w-4 text-[#1a4d2e]/30 group-hover:text-[#c5a56e] transition-colors duration-500" />
       </motion.div>
     </motion.div>
   );
@@ -163,7 +160,6 @@ function ScrollIndicator({ delay, onClick }) {
 
 /* ─────────────────────────────────────────────
    MAIN HERO SECTION
-   Watch floats down with scroll → unboxes onto showcase pillow
    ───────────────────────────────────────────── */
 export default function HeroSection() {
   const containerRef = useRef(null);
@@ -186,9 +182,8 @@ export default function HeroSection() {
     offset: ["start start", "end start"],
   });
 
-  /* Text & CTA scroll parallax (moves down slower — stays behind) */
-  const textY = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const textOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+  const textY = useTransform(scrollYProgress, [0, 1], [0, 130]);
+  const textOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
 
   const calculateTarget = () => {
     const pillowContainer = document.getElementById("showcase-pillow-container");
@@ -207,59 +202,41 @@ export default function HeroSection() {
       const heroCenterY = heroRect.top + scrollY + heroRect.height / 2;
       const heroCenterX = heroRect.left + heroRect.width / 2;
 
-      // 1. Showcase pillow target offset
       if (pillowContainer) {
         const pillowRect = pillowContainer.getBoundingClientRect();
         const pillowCenterY = pillowRect.top + scrollY + pillowRect.height * (isSm ? 0.50 : 0.56) + 5;
         const pillowCenterX = pillowRect.left + pillowRect.width / 2;
+        const calculatedX = pillowCenterX - heroCenterX;
+        const finalX = isDesktop && calculatedX > -100 ? -285 : calculatedX;
         setOffsets({
-          x: pillowCenterX - heroCenterX,
+          x: finalX,
           y: pillowCenterY - heroCenterY,
           scale,
         });
       } else {
-        setOffsets({
-          x: isDesktop ? -285 : 0,
-          y: isDesktop ? 805 : isSm ? 672 : 558,
-          scale,
-        });
+        setOffsets({ x: isDesktop ? -285 : 0, y: isDesktop ? 805 : isSm ? 672 : 558, scale });
       }
 
-      // 2. Detail section center target offset
       if (detailElement) {
         const detailRect = detailElement.getBoundingClientRect();
         const detailCenterY = detailRect.top + scrollY + detailRect.height / 2 + 45;
         const detailCenterX = detailRect.left + detailRect.width / 2;
-        setDetailOffsets({
-          x: detailCenterX - heroCenterX,
-          y: detailCenterY - heroCenterY,
-        });
+        setDetailOffsets({ x: detailCenterX - heroCenterX, y: detailCenterY - heroCenterY });
       } else {
-        setDetailOffsets({
-          x: 0,
-          y: (heroRect.height || window.innerHeight) * 2,
-        });
+        setDetailOffsets({ x: 0, y: (heroRect.height || window.innerHeight) * 2 });
       }
 
-      // 3. Watch Box section center target offset
       if (boxContainer) {
         const boxRect = boxContainer.getBoundingClientRect();
         const boxCenterY = boxRect.top + scrollY + boxRect.height / 2;
         const boxCenterX = boxRect.left + boxRect.width / 2;
-        setBoxOffsets({
-          x: boxCenterX - heroCenterX,
-          y: boxCenterY - heroCenterY,
-        });
+        setBoxOffsets({ x: boxCenterX - heroCenterX, y: boxCenterY - heroCenterY });
       } else {
-        setBoxOffsets({
-          x: 0,
-          y: (heroRect.height || window.innerHeight) * 3,
-        });
+        setBoxOffsets({ x: 0, y: (heroRect.height || window.innerHeight) * 3 });
       }
     }
   };
 
-  // Recalculate offsets on mount, after phase2, on resize and scroll
   useEffect(() => {
     calculateTarget();
     if (phase2) {
@@ -268,12 +245,9 @@ export default function HeroSection() {
     }
   }, [phase2]);
 
-  // Only recalculate offsets on resize, NOT on scroll.
   useEffect(() => {
     window.addEventListener("resize", calculateTarget);
-    return () => {
-      window.removeEventListener("resize", calculateTarget);
-    };
+    return () => window.removeEventListener("resize", calculateTarget);
   }, []);
 
   const [vh, setVh] = useState(800);
@@ -288,22 +262,13 @@ export default function HeroSection() {
 
   const { scrollY } = useScroll();
 
-  /* Smooth scrollY spring for silky unbroken watch flight */
-  const smoothScrollY = useSpring(scrollY, {
-    stiffness: 200,
-    damping: 30,
-    mass: 0.4,
-  });
+  const smoothScrollY = useSpring(scrollY, { stiffness: 200, damping: 30, mass: 0.4 });
 
-  /* Watch flight across all 4 sections: Hero (0) -> Showcase (vh) -> Detail (2vh) -> Box Reveal (3vh) */
   const watchY = useTransform(
     smoothScrollY,
     [0, vh * 0.35, vh * 0.7, vh, vh * 1.35, vh * 1.7, vh * 2.0, vh * 2.35, vh * 2.7, vh * 3.0],
     [
-      0,
-      offsets.y * 0.05,
-      offsets.y * 0.55,
-      offsets.y,
+      0, offsets.y * 0.05, offsets.y * 0.55, offsets.y,
       offsets.y + (detailOffsets.y - offsets.y) * 0.1,
       offsets.y + (detailOffsets.y - offsets.y) * 0.6,
       detailOffsets.y,
@@ -317,10 +282,7 @@ export default function HeroSection() {
     smoothScrollY,
     [0, vh * 0.35, vh * 0.7, vh, vh * 1.35, vh * 1.7, vh * 2.0, vh * 2.35, vh * 2.7, vh * 3.0],
     [
-      0,
-      offsets.x * 0.05,
-      offsets.x * 0.55,
-      offsets.x,
+      0, offsets.x * 0.05, offsets.x * 0.55, offsets.x,
       offsets.x + (detailOffsets.x - offsets.x) * 0.1,
       offsets.x + (detailOffsets.x - offsets.x) * 0.6,
       detailOffsets.x,
@@ -333,60 +295,44 @@ export default function HeroSection() {
   const [detailZoomed, setDetailZoomed] = useState(false);
 
   useEffect(() => {
-    const handleZoomEvent = (e) => {
-      setDetailZoomed(e.detail.zoomed);
-    };
+    const handleZoomEvent = (e) => setDetailZoomed(e.detail.zoomed);
     window.addEventListener("detail-zoom-trigger", handleZoomEvent);
     return () => window.removeEventListener("detail-zoom-trigger", handleZoomEvent);
   }, []);
 
-  /* Watch scroll scale base calculation */
   const watchScrollScale = useTransform(
     smoothScrollY,
     [0, vh * 0.4, vh, vh * 1.35, vh * 2.0, vh * 3.0],
     [1, 1 - (1 - offsets.scale) * 0.1, offsets.scale, offsets.scale, offsets.scale, 0.65]
   );
 
-  /* Dynamically scale watch to 1.55x when 1.0s timer triggers detailZoomed, otherwise use scroll scale */
   const targetWatchScale = useTransform(
     smoothScrollY,
     (latest) => {
       const isDetailSection = latest >= vh * 1.6 && latest < vh * 2.7;
-      if (isDetailSection && detailZoomed) {
-        return 1.55;
-      }
+      if (isDetailSection && detailZoomed) return 1.55;
       return watchScrollScale.get();
     }
   );
 
-  /* Silky smooth spring interpolation for watch scale zoom */
-  const watchScale = useSpring(targetWatchScale, {
-    stiffness: 120,
-    damping: 24,
-    mass: 0.5,
-  });
+  const watchScale = useSpring(targetWatchScale, { stiffness: 120, damping: 24, mass: 0.5 });
 
-  /* Watch rotates smoothly from 8deg in Hero -> 0deg (straight) on Showcase pillow, staying straight in Detail & Box Reveal */
   const watchRotate = useTransform(
     smoothScrollY,
     [0, vh * 0.4, vh, vh * 2.0, vh * 3.0],
     [0, -8 * 0.1, -8, -8, -8]
   );
 
-  /* Main watch stays 100% visible through section 3, then fades out as section 4 GSAP Box Docking takes over */
   const watchOpacity = useTransform(scrollY, [0, vh * 2.4, vh * 2.8], [1, 1, 0]);
-  /* Dark overlay */
-  const overlayOpacity = useTransform(scrollYProgress, [0, 0.6], [0, 0.12]);
+  const overlayOpacity = useTransform(scrollYProgress, [0, 0.6], [0, 0.1]);
 
   const [heroExitDir, setHeroExitDir] = useState(null);
   const [heroExited, setHeroExited] = useState(false);
   const prevScrollRef = useRef(0);
 
-  /* Detect scroll UP to trigger re-entry of main watch onto pillow and restore Hero watch layer */
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     const isScrollingUp = latest < prevScrollRef.current;
     prevScrollRef.current = latest;
-
     if (isScrollingUp && latest < 0.55) {
       if (typeof window !== "undefined") {
         window.dispatchEvent(new CustomEvent("hero-watch-reenter"));
@@ -396,16 +342,40 @@ export default function HeroSection() {
     }
   });
 
+  /* -- Listen for hero-watch-exit (carousel switch in showcase) -- */
   useEffect(() => {
+    let timer = null;
     const handleExit = (e) => {
       setHeroExitDir(e.detail.dir);
-      const timer = setTimeout(() => {
-        setHeroExited(true);
-      }, 700);
-      return () => clearTimeout(timer);
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => setHeroExited(true), 700);
     };
     window.addEventListener("hero-watch-exit", handleExit);
-    return () => window.removeEventListener("hero-watch-exit", handleExit);
+    return () => {
+      window.removeEventListener("hero-watch-exit", handleExit);
+      if (timer) clearTimeout(timer);
+    };
+  }, []);
+
+  /* -- Listen for showcase-silent-reset (showcase scrolls to detail, hide carousel watch) -- */
+  useEffect(() => {
+    const handleSilentReset = () => {
+      calculateTarget();
+      setHeroExitDir(null);
+      setHeroExited(false);
+    };
+    window.addEventListener("showcase-silent-reset", handleSilentReset);
+    return () => window.removeEventListener("showcase-silent-reset", handleSilentReset);
+  }, []);
+
+  /* -- Listen for hero-watch-reenter (user scrolling UP past hero) -- */
+  useEffect(() => {
+    const handleReenter = () => {
+      setHeroExitDir(null);
+      setHeroExited(false);
+    };
+    window.addEventListener("hero-watch-reenter", handleReenter);
+    return () => window.removeEventListener("hero-watch-reenter", handleReenter);
   }, []);
 
   useEffect(() => {
@@ -413,17 +383,11 @@ export default function HeroSection() {
     const timer = setTimeout(() => {
       setPhase2(true);
       setBgPhase(true);
-    }, 1400);
+    }, 1500);
     return () => clearTimeout(timer);
   }, []);
 
-  const admiringWords = [
-    "Timeless.",
-    "Elegant.",
-    "Precious.",
-    "Refined.",
-    "Prestigious.",
-  ];
+  const admiringWords = ["Timeless.", "Elegant.", "Precious.", "Refined.", "Prestigious."];
 
   return (
     <section
@@ -431,7 +395,7 @@ export default function HeroSection() {
       id="hero"
       className="relative h-screen min-h-screen overflow-visible flex items-center justify-center pt-12 sm:pt-20 snap-start snap-always"
     >
-      {/* SVG Filter for Distressed/Grunge Stamp Texture */}
+      {/* SVG Filter */}
       <svg className="hidden">
         <filter id="grunge-stamp-texture">
           <feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="3" result="noise" />
@@ -439,25 +403,23 @@ export default function HeroSection() {
         </filter>
       </svg>
 
-      {/* ── 1. Base Background: Transitions from #ffffff in Phase 1 to #e6ddc9 in Phase 2 ── */}
+      {/* ── Background ── */}
       <motion.div
         animate={{
           backgroundColor: bgPhase ? "#e6ddc9" : "#ffffff",
         }}
-        transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
         className="absolute inset-0 pointer-events-none z-0"
       >
         <motion.div
-          animate={{
-            opacity: bgPhase ? 1 : 0,
-          }}
-          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,252,245,0.9)_0%,_rgba(235,225,205,0.95)_55%,_#e6ddc9_100%)]"
+          animate={{ opacity: bgPhase ? 1 : 0 }}
+          transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,252,245,0.92)_0%,_rgba(235,225,205,0.96)_55%,_#e6ddc9_100%)]"
         />
       </motion.div>
 
-      {/* ── 2. Paper / Noise Overlay (opacity: 0.05) for Matte Tactile Feel ── */}
-      <div className="absolute inset-0 opacity-[0.05] pointer-events-none z-0 mix-blend-overlay bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:16px_16px]" />
+      {/* Paper Texture */}
+      <div className="absolute inset-0 opacity-[0.04] pointer-events-none z-0 mix-blend-overlay bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:18px_18px]" />
 
       {/* Dark overlay on scroll */}
       <motion.div
@@ -465,21 +427,17 @@ export default function HeroSection() {
         className="absolute inset-0 bg-[#0a0a0a] pointer-events-none z-10"
       />
 
-      {/* ── 4. Giant Bold Text Layer "OYSTER PERPETUAL" in Rolex Green (#004B23) (Z-Index: 1) ── */}
+      {/* ── Giant Text ── */}
       <div className="absolute inset-0 z-1 flex items-center justify-center pointer-events-none select-none">
         <div className="flex flex-col items-center">
           <div className="overflow-hidden">
             <motion.h1
-              initial={{ y: "110%" }}
+              initial={{ y: "115%" }}
               animate={phase1 ? { y: "0%" } : {}}
-              transition={{
-                duration: 1,
-                delay: 0.1,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="text-[3.5rem] sm:text-[6.5rem] md:text-[8rem] lg:text-[10.5rem] xl:text-[12.5rem] font-black tracking-tight text-[#004B23] leading-none uppercase filter drop-shadow-sm"
+              transition={{ duration: 1.1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+              className="text-[3.5rem] sm:text-[6.5rem] md:text-[8rem] lg:text-[10.5rem] xl:text-[12.5rem] font-black tracking-tight text-[#004B23] leading-[0.88] uppercase"
               style={{
-                fontFamily: "'Esthoria', serif",
+                fontFamily: "var(--font-playfair)",
                 filter: "url(#grunge-stamp-texture)",
               }}
             >
@@ -488,16 +446,12 @@ export default function HeroSection() {
           </div>
           <div className="overflow-hidden">
             <motion.h1
-              initial={{ y: "110%" }}
+              initial={{ y: "115%" }}
               animate={phase1 ? { y: "0%" } : {}}
-              transition={{
-                duration: 1,
-                delay: 0.25,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="text-[3.5rem] sm:text-[6.5rem] md:text-[8rem] lg:text-[10.5rem] xl:text-[12.5rem] font-black tracking-tight text-[#004B23] leading-none uppercase filter drop-shadow-sm -mt-2 sm:-mt-6"
+              transition={{ duration: 1.1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="text-[3.5rem] sm:text-[6.5rem] md:text-[8rem] lg:text-[10.5rem] xl:text-[12.5rem] font-black tracking-tight text-[#004B23] leading-[0.88] uppercase -mt-2 sm:-mt-6"
               style={{
-                fontFamily: "'Esthoria', serif",
+                fontFamily: "var(--font-playfair)",
                 filter: "url(#grunge-stamp-texture)",
               }}
             >
@@ -507,53 +461,48 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* ═══════════════════════════════════════════
-          WATCH — floats down & left with scroll to land directly on left pillow
-          ═══════════════════════════════════════════ */}
+      {/* -- WATCH: floats with scroll -- */}
       {!heroExited && (
         <motion.div
           id="hero-watch-wrapper"
           animate={
             heroExitDir !== null
               ? { x: heroExitDir > 0 ? "-120vw" : "120vw", opacity: 0 }
-              : {}
+              : { opacity: 1 }
           }
-          transition={{ duration: 0.7, ease: [0.32, 0, 0.67, 0] }}
-          style={{
-            y: watchY,
-            x: watchX,
-            scale: watchScale,
-            rotate: watchRotate,
-            opacity: watchOpacity,
-          }}
+          transition={
+            heroExitDir !== null
+              ? { duration: 0.7, ease: [0.32, 0, 0.67, 0] }
+              : { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
+          }
+          style={{ y: watchY, x: watchX, scale: watchScale, rotate: watchRotate, opacity: watchOpacity }}
           className="absolute inset-0 z-[20] pointer-events-none"
         >
           <div className="absolute inset-0 flex items-center justify-center">
             <motion.div
               id="hero-watch-container"
-              initial={{ opacity: 0, scale: 0.75, y: 60, rotate: 0 }}
+              initial={{ opacity: 0, scale: 0.7, y: 70, rotate: 0 }}
               animate={
                 phase2
                   ? { opacity: 1, scale: 1, y: 0, rotate: 8 }
                   : phase1
                     ? { opacity: 1, scale: 1, y: 0, rotate: 0 }
-                    : { opacity: 0, scale: 0.75, y: 60, rotate: 0 }
+                    : { opacity: 0, scale: 0.7, y: 70, rotate: 0 }
               }
               transition={
                 phase2
-                  ? { duration: 1.4, ease: [0.22, 1, 0.36, 1] }
-                  : { duration: 1.3, delay: 0.4, ease: [0.22, 1, 0.36, 1] }
+                  ? { duration: 1.5, ease: [0.22, 1, 0.36, 1] }
+                  : { duration: 1.4, delay: 0.4, ease: [0.22, 1, 0.36, 1] }
               }
               className="relative will-change-transform"
             >
-              {/* Ambient Ground Shadow under Watch */}
-              <div className="absolute top-[82%] left-1/2 -translate-x-1/2 w-[70%] h-[24px] bg-black/28 rounded-[100%] filter blur-xl pointer-events-none z-0" />
+              <div className="absolute top-[82%] left-1/2 -translate-x-1/2 w-[70%] h-[28px] bg-black/25 rounded-[100%] filter blur-xl pointer-events-none z-0" />
               <Image
                 src="/watches/hero-main-removebg-preview.png"
                 alt="LASIKA Perpetual — Luxury Timepiece"
                 width={520}
                 height={360}
-                className="relative z-10 w-[200px] sm:w-[340px] md:w-[360px] lg:w-[480px] h-auto drop-shadow-[0_38px_65px_rgba(0,0,0,0.36)]"
+                className="relative z-10 w-[200px] sm:w-[340px] md:w-[360px] lg:w-[480px] h-auto drop-shadow-[0_40px_70px_rgba(0,0,0,0.32)]"
                 priority
               />
             </motion.div>
@@ -561,44 +510,42 @@ export default function HeroSection() {
         </motion.div>
       )}
 
-      {/* CTA + Scroll — at bottom, scrolls with text (slower) */}
+      {/* CTA + Scroll */}
       <motion.div
         style={{ y: textY, opacity: textOpacity }}
         className="absolute inset-x-0 bottom-12 sm:bottom-2 md:bottom-3 lg:bottom-5 z-[35] flex flex-col items-center text-center pointer-events-none"
       >
-        {/* Gold divider — phase 2 */}
         <motion.div
           initial={{ scaleX: 0 }}
           animate={phase2 ? { scaleX: 1 } : { scaleX: 0 }}
-          transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="w-20 h-[1px] bg-gradient-to-r from-transparent via-[#c5a56e]/50 to-transparent mb-6 sm:mb-8"
+          transition={{ delay: 0.7, duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#c5a56e]/40 to-transparent mb-7 sm:mb-9"
         />
 
-        {/* CTA Button — phase 2 */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 25 }}
           animate={phase2 ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.7, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ delay: 0.8, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
           <motion.button
             whileHover={{
-              scale: 1.04,
-              boxShadow: "0 8px 30px rgba(26,77,46,0.2)",
+              scale: 1.05,
+              boxShadow: "0 12px 40px rgba(26,77,46,0.22), 0 0 0 1px rgba(197,165,110,0.2)",
             }}
             whileTap={{ scale: 0.97 }}
             onClick={scrollToShowcase}
-            transition={{ type: "spring", stiffness: 400, damping: 25 }}
-            className="relative overflow-hidden bg-[#1a4d2e] text-white px-5 sm:px-10 py-2 sm:py-3.5 rounded-sm text-[9.5px] sm:text-xs tracking-[0.2em] sm:tracking-[0.25em] uppercase font-medium shadow-lg pointer-events-auto cursor-pointer"
+            transition={{ type: "spring", stiffness: 380, damping: 22 }}
+            className="shimmer-hover relative overflow-hidden bg-[#1a4d2e] text-white px-6 sm:px-12 py-2.5 sm:py-4 rounded-sm text-[9px] sm:text-[11px] tracking-[0.22em] sm:tracking-[0.28em] uppercase font-semibold shadow-lg shadow-[#1a4d2e]/15 pointer-events-auto cursor-pointer"
+            style={{ fontFamily: "var(--font-geist)" }}
           >
-            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-700" />
-            <span className="relative z-10">Learn more</span>
+            <span className="relative z-10">Discover Collection</span>
           </motion.button>
         </motion.div>
 
-        <ScrollIndicator delay={4} onClick={scrollToShowcase} />
+        <ScrollIndicator delay={4.2} onClick={scrollToShowcase} />
       </motion.div>
 
-      {/* PHASE 2 — TOP-LEFT BEZEL CARD */}
+      {/* PHASE 2 — Detail Cards */}
       <DetailCard
         src="/watches/hero-detail-bezel-removebg-preview.png"
         label="Fluted Bezel"
@@ -606,8 +553,6 @@ export default function HeroSection() {
         position="top-left"
         phase2={phase2}
       />
-
-      {/* PHASE 2 — BOTTOM-RIGHT MOVEMENT CARD */}
       <DetailCard
         src="/watches/hero-detail-movement.png"
         label="Calibre 3235"
@@ -616,7 +561,7 @@ export default function HeroSection() {
         phase2={phase2}
       />
 
-      {/* PHASE 2 — SCATTERED ADMIRING WORDS (ON ALL VIEWPORTS) */}
+      {/* PHASE 2 — Scattered Words */}
       {admiringWords.map((word, i) => (
         <ScatteredWord key={word} word={word} phase2={phase2} index={i} />
       ))}
@@ -626,8 +571,9 @@ export default function HeroSection() {
         <motion.p
           initial={{ opacity: 0, x: -20 }}
           animate={phase2 ? { opacity: 1, x: 0 } : {}}
-          transition={{ delay: 1, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="text-[9px] tracking-[0.4em] uppercase text-[#c5a56e]/20 [writing-mode:vertical-lr] rotate-180"
+          transition={{ delay: 1.1, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="text-[9px] tracking-[0.45em] uppercase text-[#c5a56e]/15 [writing-mode:vertical-lr] rotate-180"
+          style={{ fontFamily: "var(--font-geist)" }}
         >
           Swiss Made — Est. 1885
         </motion.p>
@@ -636,8 +582,9 @@ export default function HeroSection() {
         <motion.p
           initial={{ opacity: 0, x: 20 }}
           animate={phase2 ? { opacity: 1, x: 0 } : {}}
-          transition={{ delay: 1, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="text-[9px] tracking-[0.4em] uppercase text-[#c5a56e]/20 [writing-mode:vertical-lr]"
+          transition={{ delay: 1.1, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="text-[9px] tracking-[0.45em] uppercase text-[#c5a56e]/15 [writing-mode:vertical-lr]"
+          style={{ fontFamily: "var(--font-geist)" }}
         >
           Perpetual Excellence
         </motion.p>
