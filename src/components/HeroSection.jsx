@@ -177,13 +177,14 @@ export default function HeroSection() {
     }
   };
 
+  const { scrollY } = useScroll();
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
 
-  const textY = useTransform(scrollYProgress, [0, 1], [0, 130]);
-  const textOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
+  const textY = useTransform(scrollY, [0, 200], [0, 40]);
+  const textOpacity = useTransform(scrollY, [0, 100, 180], [1, 0, 0]);
 
   const calculateTarget = () => {
     const pillowContainer = document.getElementById("showcase-pillow-container");
@@ -194,7 +195,7 @@ export default function HeroSection() {
     const isMd = window.innerWidth >= 768;
     const isSm = window.innerWidth >= 640;
 
-    const scale = isDesktop ? 0.79 : isMd ? 0.97 : isSm ? 0.91 : 1.04;
+    const scale = isDesktop ? 0.79 : isMd ? 0.97 : isSm ? 0.91 : 0.80;
 
     if (heroElement) {
       const heroRect = heroElement.getBoundingClientRect();
@@ -204,7 +205,7 @@ export default function HeroSection() {
 
       if (pillowContainer) {
         const pillowRect = pillowContainer.getBoundingClientRect();
-        const pillowCenterY = pillowRect.top + scrollY + pillowRect.height * (isSm ? 0.50 : 0.56) + 5;
+        const pillowCenterY = pillowRect.top + scrollY + pillowRect.height * (isSm ? 0.50 : 0.51);
         const pillowCenterX = pillowRect.left + pillowRect.width / 2;
         const calculatedX = pillowCenterX - heroCenterX;
         const finalX = isDesktop && calculatedX > -100 ? -285 : calculatedX;
@@ -259,8 +260,6 @@ export default function HeroSection() {
       return () => window.removeEventListener("resize", handleResize);
     }
   }, []);
-
-  const { scrollY } = useScroll();
 
   const smoothScrollY = useSpring(scrollY, { stiffness: 200, damping: 30, mass: 0.4 });
 
@@ -513,7 +512,7 @@ export default function HeroSection() {
       {/* CTA + Scroll */}
       <motion.div
         style={{ y: textY, opacity: textOpacity }}
-        className="absolute inset-x-0 bottom-12 sm:bottom-2 md:bottom-3 lg:bottom-5 z-[35] flex flex-col items-center text-center pointer-events-none"
+        className="absolute inset-x-0 bottom-16 sm:bottom-2 md:bottom-3 lg:bottom-5 z-[35] flex flex-col items-center text-center pointer-events-none"
       >
         <motion.div
           initial={{ scaleX: 0 }}

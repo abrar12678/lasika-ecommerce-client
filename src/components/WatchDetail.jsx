@@ -1,23 +1,47 @@
 "use client";
 
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import gsap from "gsap";
 
 /* -- WATCH PARTS: Callout Annotation Data -- */
 const WATCH_PARTS = [
-  { id: "bezel", name: "FLUTED BEZEL", subtitle: "18K Yellow Gold", sx: 57.5, sy: 34.0, cx: 66.75, cy: 29.0, ex: 76.0, ey: 24.0, hLen: 5, align: "right" },
-  { id: "cyclops", name: "CYCLOPS LENS", subtitle: "2.5× Date Magnifier", sx: 57.0, sy: 49.5, cx: 66.5, cy: 49.48, ex: 76.0, ey: 49.5, hLen: 5, align: "right" },
-  { id: "bracelet", name: "PRESIDENT BRACELET", subtitle: "Two-Tone Jubilee Links", sx: 50.0, sy: 87.0, cx: 63.0, cy: 82.5, ex: 76.0, ey: 78.0, hLen: 5, align: "right" },
-  { id: "dial", name: "SUNBURST DIAL", subtitle: "Olive Sunray Finish", sx: 44.0, sy: 42.0, cx: 34.0, cy: 33.0, ex: 24.0, ey: 24.0, hLen: 5, align: "left" },
-  { id: "movement", name: "CALIBRE 3235", subtitle: "Perpetual Movement & Hands", sx: 49.8, sy: 49.5, cx: 36.9, cy: 49.48, ex: 24.0, ey: 49.5, hLen: 5, align: "left" },
-  { id: "case", name: "OYSTER CASE", subtitle: "904L Steel & 100m Case", sx: 39.0, sy: 58.0, cx: 31.5, cy: 68.0, ex: 24.0, ey: 78.0, hLen: 5, align: "left" },
+  { id: "bezel", name: "FLUTED BEZEL", subtitle: "18K Yellow Gold", sx: 59.0, sy: 36.0, cx: 65.0, cy: 34.0, ex: 76.0, ey: 24.0, hLen: 5, align: "right" },
+  { id: "cyclops", name: "CYCLOPS LENS", subtitle: "2.5× Date Magnifier", sx: 63.5, sy: 45.0, cx: 70.0, cy: 48.5, ex: 76.0, ey: 48.5, hLen: 5, align: "right" },
+  { id: "bracelet", name: "PRESIDENT BRACELET", subtitle: "Two-Tone Jubilee Links", sx: 52.0, sy: 85.0, cx: 63.0, cy: 82.0, ex: 76.0, ey: 78.0, hLen: 5, align: "right" },
+  { id: "dial", name: "SUNBURST DIAL", subtitle: "Olive Sunray Finish", sx: 43.0, sy: 40.0, cx: 34.0, cy: 34.0, ex: 24.0, ey: 24.0, hLen: 5, align: "left" },
+  { id: "movement", name: "CALIBRE 3235", subtitle: "Perpetual Movement & Hands", sx: 48.0, sy: 49.0, cx: 35.0, cy: 47.0, ex: 24.0, ey: 49.5, hLen: 5, align: "left" },
+  { id: "case", name: "OYSTER CASE", subtitle: "904L Steel & 100m Case", sx: 43.0, sy: 61.0, cx: 34.0, cy: 71.0, ex: 24.0, ey: 78.0, hLen: 5, align: "left" },
 ];
 
 export default function WatchDetail() {
   const sectionRef = useRef(null);
   const [delta, setDelta] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  const activeParts = useMemo(() => {
+    if (!isMobile) return WATCH_PARTS;
+    const mobileCoords = {
+      bezel: { sx: 57.2, sy: 43.0, cx: 68.0, cy: 38.0, ex: 82.0, ey: 34.0 },
+      cyclops: { sx: 63.0, sy: 46.5, cx: 73.0, cy: 49.5, ex: 82.0, ey: 50.0 },
+      bracelet: { sx: 50.0, sy: 68.5, cx: 67.0, cy: 67.5, ex: 82.0, ey: 68.0 },
+      dial: { sx: 44.0, sy: 43.5, cx: 32.0, cy: 38.0, ex: 18.0, ey: 34.0 },
+      movement: { sx: 49.5, sy: 52.0, cx: 32.0, cy: 47.0, ex: 18.0, ey: 50.0 },
+      case: { sx: 42.5, sy: 58.5, cx: 32.0, cy: 62.0, ex: 18.0, ey: 68.0 },
+    };
+    return WATCH_PARTS.map((p) => {
+      const m = mobileCoords[p.id] || {};
+      return { ...p, ...m, hLen: 2.0 };
+    });
+  }, [isMobile]);
 
   const pathsRef = useRef([]);
   const watchDotsRef = useRef([]);
@@ -44,15 +68,8 @@ export default function WatchDetail() {
 
     if (!vPaths.length) return;
 
-    vPaths.forEach((p) => {
-      try {
-        const len = p.getTotalLength() || 100;
-        gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
-      } catch (_) {
-        gsap.set(p, { strokeDashoffset: 0 });
-      }
-    });
-
+    // Opacity fade-in — avoids all strokeDash/getTotalLength clipping issues
+    gsap.set(vPaths, { opacity: 0 });
     gsap.set(vWDots, { scale: 0, opacity: 0 });
     gsap.set(vEDots, { scale: 0, opacity: 0 });
     gsap.set(vHLines, { scaleX: 0 });
@@ -62,7 +79,7 @@ export default function WatchDetail() {
     vWDots.forEach((d) => gsap.set(d, { transformOrigin: "center center" }));
     vEDots.forEach((d) => gsap.set(d, { transformOrigin: "center center" }));
     vHLines.forEach((line, i) => {
-      const isRight = WATCH_PARTS[i]?.align === "right";
+      const isRight = activeParts[i]?.align === "right";
       gsap.set(line, { transformOrigin: isRight ? "0% 50%" : "100% 50%" });
     });
 
@@ -70,12 +87,12 @@ export default function WatchDetail() {
     tlRef.current = tl;
 
     tl.to(vWDots, { scale: 1, opacity: 1, duration: 0.4, stagger: 0.06, ease: "back.out(2.5)" });
-    tl.to(vPaths, { strokeDashoffset: 0, duration: 0.9, stagger: 0.07, ease: "power2.inOut" }, 0.15);
-    tl.to(vEDots, { scale: 1, opacity: 1, duration: 0.3, stagger: 0.05, ease: "back.out(2)" }, 0.65);
-    tl.to(vHLines, { scaleX: 1, duration: 0.4, stagger: 0.04, ease: "power2.out" }, 0.7);
-    tl.to(vLabels, { opacity: 1, y: 0, duration: 0.55, stagger: 0.07, ease: "power2.out" }, 0.8);
-    tl.to(vSubtitles, { opacity: 1, y: 0, duration: 0.45, stagger: 0.07, ease: "power2.out" }, 0.95);
-  }, []);
+    tl.to(vPaths, { opacity: 1, duration: 0.7, stagger: 0.07, ease: "power2.out" }, 0.15);
+    tl.to(vEDots, { scale: 1, opacity: 1, duration: 0.3, stagger: 0.05, ease: "back.out(2)" }, 0.55);
+    tl.to(vHLines, { scaleX: 1, duration: 0.4, stagger: 0.04, ease: "power2.out" }, 0.6);
+    tl.to(vLabels, { opacity: 1, y: 0, duration: 0.55, stagger: 0.07, ease: "power2.out" }, 0.7);
+    tl.to(vSubtitles, { opacity: 1, y: 0, duration: 0.45, stagger: 0.07, ease: "power2.out" }, 0.85);
+  }, [activeParts]);
 
   /* -- IMPERATIVE: Reset -- */
   const resetCalloutAnimation = useCallback(() => {
@@ -89,9 +106,7 @@ export default function WatchDetail() {
     const vLabels = labelsRef.current.filter(Boolean);
     const vSubtitles = subtitleRefs.current.filter(Boolean);
 
-    vPaths.forEach((p) => {
-      try { const len = p.getTotalLength(); gsap.set(p, { strokeDasharray: len, strokeDashoffset: len }); } catch (_) { }
-    });
+    gsap.set(vPaths, { opacity: 0 });
     gsap.set(vWDots, { scale: 0, opacity: 0 });
     gsap.set(vEDots, { scale: 0, opacity: 0 });
     gsap.set(vHLines, { scaleX: 0 });
@@ -167,7 +182,7 @@ export default function WatchDetail() {
       if (animTimerRef.current) clearTimeout(animTimerRef.current);
       if (tlRef.current) { tlRef.current.kill(); tlRef.current = null; }
     };
-  }, [playCalloutAnimation, resetCalloutAnimation]);
+  }, []);
 
   /* -- Scroll Progress -- */
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
@@ -190,12 +205,12 @@ export default function WatchDetail() {
 
       {/* -- PILLOW CONTAINER -- */}
       <motion.div
-        animate={{ scale: isZoomed ? 3.6 : 1 }}
+        animate={{ scale: isZoomed ? (isMobile ? 2.1 : 3.6) : 1 }}
         transition={{ duration: isZoomed ? 2.2 : 1.1, ease: isZoomed ? [0.16, 1, 0.3, 1] : [0.45, 0, 0.85, 0.35] }}
         style={{ y: pillowY, x: pillowX, opacity: pillowOpacity, zIndex: 5 }}
         className="absolute inset-0 flex items-center justify-center pointer-events-none will-change-transform"
       >
-        <div className="relative w-[340px] sm:w-[480px] aspect-square flex items-center justify-center translate-y-[45px]">
+        <div className="relative w-[340px] sm:w-[480px] aspect-square flex items-center justify-center translate-y-[12px] sm:translate-y-[45px]">
           <Image
             src="/watches/watch-pillow.png"
             alt="Dark Leather Display Pillow"
@@ -203,7 +218,7 @@ export default function WatchDetail() {
             height={600}
             quality={95}
             priority
-            className="w-full h-auto object-contain filter drop-shadow-[0_32px 65px_rgba(0,0,0,0.45)] contrast-[1.04] brightness-[1.01]"
+            className="w-full h-auto object-contain filter drop-shadow-[0_32px_65px_rgba(0,0,0,0.45)] contrast-[1.04] brightness-[1.01]"
           />
         </div>
       </motion.div>
@@ -227,21 +242,22 @@ export default function WatchDetail() {
               <stop offset="100%" stopColor="#ffffff" stopOpacity="1" />
             </linearGradient>
           </defs>
-          {WATCH_PARTS.map((p, i) => (
+          {activeParts.map((p, i) => (
             <path
               key={p.id}
               ref={(el) => (pathsRef.current[i] = el)}
-              d={`M${p.sx},${p.sy} Q${p.cx},${p.cy} ${p.ex},${p.ey}`}
+              d={`M${p.sx},${p.sy} L${p.ex},${p.ey}`}
               stroke="url(#lineGlow)"
               strokeWidth="1.6"
               strokeLinecap="round"
               vectorEffect="non-scaling-stroke"
+              style={{ opacity: 0 }}
             />
           ))}
         </svg>
 
         {/* Watch-Part Dots */}
-        {WATCH_PARTS.map((p, i) => (
+        {activeParts.map((p, i) => (
           <div
             key={`wd-${p.id}`}
             ref={(el) => (watchDotsRef.current[i] = el)}
@@ -254,7 +270,7 @@ export default function WatchDetail() {
         ))}
 
         {/* Endpoint Dots */}
-        {WATCH_PARTS.map((p, i) => (
+        {activeParts.map((p, i) => (
           <div
             key={`ed-${p.id}`}
             ref={(el) => (endDotsRef.current[i] = el)}
@@ -264,7 +280,7 @@ export default function WatchDetail() {
         ))}
 
         {/* Horizontal Connector Lines */}
-        {WATCH_PARTS.map((p, i) => {
+        {activeParts.map((p, i) => {
           const isRight = p.align === "right";
           const lineLeft = isRight ? p.ex : p.ex - p.hLen;
           return (
@@ -284,7 +300,7 @@ export default function WatchDetail() {
         })}
 
         {/* Text Labels (glass morphism) with subtitles */}
-        {WATCH_PARTS.map((p, i) => {
+        {activeParts.map((p, i) => {
           const isRight = p.align === "right";
           const labelX = isRight ? p.ex + p.hLen : p.ex - p.hLen;
           return (
@@ -292,30 +308,37 @@ export default function WatchDetail() {
               key={`lb-${p.id}`}
               className="absolute pointer-events-auto"
               style={{
-                left: isRight ? `${labelX}%` : "auto",
-                right: isRight ? "auto" : `${100 - labelX}%`,
+                left: isMobile
+                  ? isRight ? "auto" : "1.5%"
+                  : isRight ? `${labelX}%` : "auto",
+                right: isMobile
+                  ? isRight ? "1.5%" : "auto"
+                  : isRight ? "auto" : `${100 - labelX}%`,
                 top: `${p.ey}%`,
                 transform: "translateY(-50%)",
               }}
             >
               <div
                 ref={(el) => (labelsRef.current[i] = el)}
-                className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-full border border-white/40 shadow-[0_10px 40px_rgba(0,0,0,0.2)] flex flex-col ${isRight ? "text-left items-start" : "text-right items-end"}`}
+                className={`px-2.5 py-1.5 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-full border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.2)] flex flex-col ${isMobile
+                  ? isRight ? "text-right items-end max-w-[115px]" : "text-left items-start max-w-[115px]"
+                  : isRight ? "text-left items-start" : "text-right items-end"
+                  }`}
                 style={{
-                  background: "rgba(255, 255, 255, 0.12)",
+                  background: "rgba(255, 255, 255, 0.16)",
                   backdropFilter: "blur(16px) saturate(1.5)",
                   WebkitBackdropFilter: "blur(16px) saturate(1.5)",
                 }}
               >
                 <p
-                  className="text-[8.5px] sm:text-[10.5px] md:text-[11.5px] tracking-[0.16em] uppercase font-bold text-white leading-tight whitespace-nowrap"
+                  className="text-[7.5px] sm:text-[10.5px] md:text-[11.5px] tracking-[0.12em] sm:tracking-[0.16em] uppercase font-bold text-white leading-tight"
                   style={{ fontFamily: "var(--font-geist)" }}
                 >
                   {p.name}
                 </p>
                 <p
                   ref={(el) => (subtitleRefs.current[i] = el)}
-                  className="text-[7px] sm:text-[8.5px] md:text-[9px] tracking-[0.06em] uppercase font-normal text-white/50 mt-0.5 whitespace-nowrap"
+                  className="text-[6.5px] sm:text-[8.5px] md:text-[9px] tracking-[0.04em] sm:tracking-[0.06em] uppercase font-normal text-white/65 mt-0.5 leading-tight"
                   style={{ fontFamily: "var(--font-geist)" }}
                 >
                   {p.subtitle}

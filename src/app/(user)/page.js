@@ -2,13 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import HeroSection from "@/components/HeroSection";
-import Navbar from "@/components/Navbar";
 import ProductShowcase from "@/components/ProductShowcase";
 import WatchDetail from "@/components/WatchDetail";
 import WatchBoxSection from "@/components/WatchBoxSection";
 import ReviewSection from "@/components/ReviewSection";
 import FAQSection from "@/components/FAQSection";
-import Footer from "@/components/Footer";
 
 export default function Home() {
   const isScrollingRef = useRef(false);
@@ -89,14 +87,12 @@ export default function Home() {
 
   return (
     <main className="w-full relative bg-[var(--color-cream)]">
-      <Navbar />
       <HeroSection />
       <ProductShowcase />
       <WatchDetail />
       <WatchBoxSection />
       <ReviewSection />
       <FAQSection />
-      <Footer />
     </main>
   );
 }

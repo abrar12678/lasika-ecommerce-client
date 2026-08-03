@@ -36,24 +36,27 @@ export default function WatchBoxSection() {
         gsap.set(textLines, { y: "100%", opacity: 0 });
       }
 
+      const isDesktop = window.innerWidth >= 1024;
+      const isMd = window.innerWidth >= 768;
+
+      const dockingScale = isDesktop ? 0.37 : isMd ? 0.33 : 0.30;
+      const dockingY = isDesktop ? "56px" : isMd ? "42px" : "16px";
+
       /* ── Phase 1: Scale Down & Box Reveal ── */
       tl.to(watchPillowWrapperRef.current, { scale: 0.36, y: "15px", duration: 0.85, ease: "power2.out" }, 0.1);
       tl.to(boxGraphicRef.current, { opacity: 1, scale: 1, y: "0px", duration: 0.85, ease: "power2.out" }, 0.1);
 
       /* ── Phase 2: Docking Inside Box ── */
-      tl.to(watchPillowWrapperRef.current, { scale: 0.325, y: "50px", duration: 0.55, ease: "power1.inOut" }, 0.85);
+      tl.to(watchPillowWrapperRef.current, { scale: dockingScale, y: dockingY, duration: 0.55, ease: "power1.inOut" }, 0.85);
 
       /* ── Phase 3: Text Reveal ── */
       if (textLines.length > 0) {
         tl.to(textLines, { y: "0%", opacity: 1, duration: 0.85, stagger: 0.13, ease: "power3.out" }, 1.4);
       }
 
-      const isDesktop = window.innerWidth >= 1024;
-      const isMd = window.innerWidth >= 768;
-
-      const targetX = isDesktop ? "-2.3vw" : isMd ? "-1.8vw" : "0vw";
-      const targetY = isDesktop ? "-19vh" : isMd ? "-17vh" : "-20vh";
-      const targetScale = isDesktop ? 0.40 : isMd ? 0.36 : 0.32;
+      const targetX = isDesktop ? "-2.3vw" : isMd ? "-1.8vw" : "-3.5vw";
+      const targetY = isDesktop ? "-19vh" : isMd ? "-17vh" : "-7.5vh";
+      const targetScale = isDesktop ? 0.40 : isMd ? 0.36 : 0.26;
 
       tl.to(dockedAssemblyRef.current, { x: targetX, y: targetY, scale: targetScale, duration: 0.95, ease: "power2.inOut" }, 1.5);
     }, sectionRef);
@@ -74,14 +77,14 @@ export default function WatchBoxSection() {
       <div className="grain-overlay" style={{ opacity: 0.025 }} />
 
       {/* Layer 1: Background Typography (Z-Index: 5) */}
-      <div className="absolute inset-0 flex flex-col justify-center items-center px-4 sm:px-8 pointer-events-none z-5">
+      <div className="absolute inset-0 flex flex-col justify-center items-center px-3 sm:px-8 pointer-events-none z-5">
         <h1
-          className="reveal-text text-3xl sm:text-5xl md:text-7xl lg:text-[6.5rem] xl:text-[7.5rem] font-black text-[#0a3d1e] tracking-tight text-center uppercase leading-[1.08] w-full max-w-[1600px]"
+          className="reveal-text text-4xl sm:text-5xl md:text-7xl lg:text-[6.5rem] xl:text-[7.5rem] font-black text-[#0a3d1e] tracking-tight text-center uppercase leading-[1.08] w-full max-w-[1600px]"
           style={{ fontFamily: "var(--font-playfair)" }}
         >
           <div className="line flex items-center justify-center gap-x-2 sm:gap-x-4 md:gap-x-5 overflow-hidden my-2 sm:my-4 md:my-5 whitespace-nowrap">
             <span className="inline-block translate-y-full whitespace-nowrap">TURNING</span>
-            <div className="w-[70px] sm:w-[100px] md:w-[125px] lg:w-[140px] h-2 inline-block pointer-events-none shrink-0" />
+            <div className="w-[40px] sm:w-[100px] md:w-[125px] lg:w-[140px] h-2 inline-block pointer-events-none shrink-0" />
             <span className="inline-block translate-y-full whitespace-nowrap">EVERY DAY</span>
           </div>
 

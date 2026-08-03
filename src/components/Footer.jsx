@@ -1,14 +1,39 @@
 "use client";
 
 import { useRef } from "react";
+import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { Watch, Mail, Phone, MapPin } from "lucide-react";
 
 const footerLinks = {
-  Collection: ["Oyster Perpetual", "Day-Date", "Submariner", "GMT-Master", "Explorer"],
-  Services: ["Watch Care", "Authentication", "Engraving", "Appraisal", "Repair"],
-  Company: ["Our Heritage", "Atelier", "Sustainability", "Careers", "Press"],
-  Support: ["Contact Us", "Shipping Info", "Returns", "FAQ", "Size Guide"],
+  Collection: [
+    { label: "Oyster Perpetual", href: "/products?category=Oyster+Perpetual" },
+    { label: "Day-Date", href: "/products?category=Day-Date" },
+    { label: "Submariner", href: "/products?category=Submariner" },
+    { label: "GMT-Master", href: "/products?category=GMT-Master" },
+    { label: "Explorer", href: "/products?category=Explorer" },
+  ],
+  Services: [
+    { label: "Watch Care", href: "/about" },
+    { label: "Authentication", href: "/about" },
+    { label: "Engraving", href: "/contact" },
+    { label: "Appraisal", href: "/contact" },
+    { label: "Repair", href: "/contact" },
+  ],
+  Company: [
+    { label: "Our Heritage", href: "/about" },
+    { label: "Atelier", href: "/about" },
+    { label: "Sustainability", href: "/about" },
+    { label: "Careers", href: "/contact" },
+    { label: "Press", href: "/contact" },
+  ],
+  Support: [
+    { label: "Contact Us", href: "/contact" },
+    { label: "Shipping Info", href: "/contact" },
+    { label: "Returns", href: "/contact" },
+    { label: "FAQ", href: "/#faq" },
+    { label: "Size Guide", href: "/products" },
+  ],
 };
 
 export default function Footer() {
@@ -25,10 +50,10 @@ export default function Footer() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-10 sm:gap-8 lg:gap-6 mb-14 sm:mb-16">
           {/* Brand Column */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className="col-span-2 sm:col-span-3 lg:col-span-1 mb-6 lg:mb-0">
-            <div className="flex items-center gap-3 mb-5">
-              <Watch className="h-5 w-5 text-[#c5a56e] stroke-[1.4]" />
+            <Link href="/" className="flex items-center gap-3 mb-5 group">
+              <Watch className="h-5 w-5 text-[#c5a56e] stroke-[1.4] group-hover:rotate-[360deg] transition-transform duration-800" />
               <h3 className="text-xl tracking-[0.35em] text-gold-gradient font-semibold" style={{ fontFamily: "var(--font-playfair)" }}>LASIKA</h3>
-            </div>
+            </Link>
             <p className="text-[12px] sm:text-[13px] leading-[1.7] text-white/30 max-w-[260px]" style={{ fontFamily: "var(--font-geist)" }}>
               Swiss luxury timepieces crafted with precision since 1885. Every watch tells a story of perpetual excellence.
             </p>
@@ -62,8 +87,8 @@ export default function Footer() {
               <h4 className="text-[11px] tracking-[0.2em] uppercase text-white/50 font-semibold mb-4 sm:mb-5" style={{ fontFamily: "var(--font-geist)" }}>{title}</h4>
               <ul className="space-y-2.5">
                 {links.map((link) => (
-                  <li key={link}>
-                    <a href="#" className="text-[12px] sm:text-[13px] text-white/25 hover:text-[#c5a56e] transition-colors duration-300" style={{ fontFamily: "var(--font-geist)" }}>{link}</a>
+                  <li key={link.label}>
+                    <Link href={link.href} className="text-[12px] sm:text-[13px] text-white/25 hover:text-[#c5a56e] transition-colors duration-300" style={{ fontFamily: "var(--font-geist)" }}>{link.label}</Link>
                   </li>
                 ))}
               </ul>
@@ -80,20 +105,20 @@ export default function Footer() {
             <a href="tel:+41227101885" className="flex items-center gap-2.5 text-[12px] text-white/25 hover:text-[#c5a56e] transition-colors duration-300" style={{ fontFamily: "var(--font-geist)" }}>
               <Phone className="h-3.5 w-3.5" strokeWidth={1.4} />+41 22 710 18 85
             </a>
-            <span className="flex items-center gap-2.5 text-[12px] text-white/25" style={{ fontFamily: "var(--font-geist)" }}>
+            <Link href="/contact" className="flex items-center gap-2.5 text-[12px] text-white/25 hover:text-[#c5a56e] transition-colors duration-300" style={{ fontFamily: "var(--font-geist)" }}>
               <MapPin className="h-3.5 w-3.5" strokeWidth={1.4} />Rue du Rhône 40, Geneva
-            </span>
+            </Link>
           </div>
         </motion.div>
 
         {/* Bottom Bar */}
         <div className="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-[11px] text-white/15 tracking-[0.04em]" style={{ fontFamily: "var(--font-geist)" }}>
-            &copy; {new Date().getFullYear()} LASIKA. All rights reserved. Swiss Made.
+            &copy; 2025 LASIKA. All rights reserved. Swiss Made.
           </p>
           <div className="flex items-center gap-5">
-            {["Privacy Policy", "Terms of Service", "Cookie Settings"].map((link) => (
-              <a key={link} href="#" className="text-[11px] text-white/15 hover:text-white/40 transition-colors duration-300 tracking-wide" style={{ fontFamily: "var(--font-geist)" }}>{link}</a>
+            {[{ label: "Privacy Policy", href: "/about" }, { label: "Terms of Service", href: "/about" }, { label: "Cookie Settings", href: "/contact" }].map((link) => (
+              <Link key={link.label} href={link.href} className="text-[11px] text-white/15 hover:text-white/40 transition-colors duration-300 tracking-wide" style={{ fontFamily: "var(--font-geist)" }}>{link.label}</Link>
             ))}
           </div>
         </div>

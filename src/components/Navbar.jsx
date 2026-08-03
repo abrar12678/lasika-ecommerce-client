@@ -10,6 +10,7 @@ import {
 } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "@/lib/auth.client";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -137,6 +138,8 @@ function MobileNavItem({ link, index, onClose, isActive }) {
    NAVBAR
    ───────────────────────────────────────────── */
 export default function Navbar() {
+  const { data: session, isPending, error } = useSession();
+  const user = session?.user;
   const [mobileOpen, setMobileOpen] = useState(false);
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
@@ -276,14 +279,14 @@ export default function Navbar() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.6 }}
               >
-                <CTAButton label="Sign In" variant="outline" href="/login" />
+                <CTAButton label="Sign In" variant="outline" href="/auth/login" />
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: -12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.65, duration: 0.6 }}
               >
-                <CTAButton label="Discover" variant="filled" href="/signup" />
+                <CTAButton label="Register" variant="filled" href="/auth/register" />
               </motion.div>
             </div>
 
@@ -369,8 +372,8 @@ export default function Navbar() {
                   transition={{ delay: 0.6, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                   className="flex flex-col gap-3"
                 >
-                  <CTAButton label="Sign In" variant="outline" href="/login" />
-                  <CTAButton label="Discover" variant="filled" href="/signup" />
+                  <CTAButton label="Sign In" variant="outline" href="/auth/login" />
+                  <CTAButton label="Register" variant="filled" href="/auth/register" />
                 </motion.div>
                 <div className="mt-auto pt-10">
                   <div className="divider-gold mb-6" />
